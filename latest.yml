@@ -1,0 +1,8 @@
+version: 0.2.0
+files:
+  - url: EHpos-0.2.0-setup.exe
+    sha512: PvE2i7BRTCHnAbuwbwOp2L/BgyrrokkLciwVMGTmVXwu8J6G1Z4cBgZREP3arPK+olBktsgYST/rnOCIJGymZQ==
+    size: 100144012
+path: EHpos-0.2.0-setup.exe
+sha512: PvE2i7BRTCHnAbuwbwOp2L/BgyrrokkLciwVMGTmVXwu8J6G1Z4cBgZREP3arPK+olBktsgYST/rnOCIJGymZQ==
+releaseDate: '2026-08-15T08:24:11.955Z'
