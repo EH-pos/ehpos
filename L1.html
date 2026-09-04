@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قوى الأسس والمعادلات الأسية | منصة التعلم التفاعلي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.js"></script>
+<style>
+/* ============ متغيرات التصميم (Design Tokens) ============ */
+:root{
+  --ink:#173430;
+  --ink-soft:#3f5b56;
+  --paper:#f6f4ee;
+  --paper-raised:#ffffff;
+  --teal:#0f766e;
+  --teal-deep:#0b4f4a;
+  --teal-pale:#e3f1ef;
+  --amber:#c8720b;
+  --amber-pale:#fbe9d2;
+  --rose:#a6335f;
+  --rose-pale:#f7e3ec;
+  --line:#e2ddd0;
+  --good:#1a7d4a;
+  --good-pale:#e1f3e8;
+  --bad:#b3312c;
+  --bad-pale:#fbe4e2;
+  --radius:14px;
+  --shadow:0 10px 30px -14px rgba(23,52,48,.25);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:'Tajawal',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Cairo',sans-serif;margin:0 0 .5em;color:var(--teal-deep);}
+p{margin:0 0 1em;}
+img{max-width:100%;}
+button{font-family:inherit;cursor:pointer;}
+input,textarea{font-family:inherit;}
+::selection{background:var(--amber-pale);}
+
+/* ============ شريط التنقل ============ */
+.navbar{
+  position:sticky;top:0;z-index:100;
+  background:linear-gradient(180deg,var(--teal-deep),var(--teal));
+  box-shadow:var(--shadow);
+}
+.nav-inner{
+  max-width:1180px;margin:0 auto;padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+.brand{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 0;color:#fff;font-family:'Cairo',sans-serif;font-weight:800;font-size:1.15rem;
+}
+.brand .mark{
+  width:38px;height:38px;border-radius:10px;
+  background:var(--amber);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cairo',sans-serif;font-weight:900;color:#2a1600;font-size:1.05rem;
+  box-shadow:0 4px 10px rgba(0,0,0,.2);
+}
+.nav-links{display:flex;gap:6px;flex-wrap:wrap;padding:10px 0;}
+.nav-btn{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  color:#f2fbf9;
+  padding:10px 18px;border-radius:999px;
+  font-weight:700;font-size:.96rem;
+  display:flex;align-items:center;gap:8px;
+  transition:background .2s,transform .15s;
+}
+.nav-btn:hover{background:rgba(255,255,255,.18);}
+.nav-btn.active{background:var(--amber);color:#2a1600;border-color:transparent;}
+.nav-btn.teacher{background:transparent;border:1px dashed rgba(255,255,255,.4);font-size:.85rem;}
+
+/* ============ الحاويات العامة ============ */
+.wrap{max-width:1180px;margin:0 auto;padding:34px 20px 80px;}
+.view{display:none;animation:fadeUp .45s ease;}
+.view.active{display:block;}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ============ قسم الشرح: البطل (Hero) ============ */
+.hero{
+  background:linear-gradient(135deg,var(--teal) 0%,var(--teal-deep) 100%);
+  border-radius:20px;color:#fff;padding:40px 34px;
+  display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:center;
+  margin-bottom:34px;position:relative;overflow:hidden;
+}
+.hero:before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 85% 20%, rgba(200,114,11,.35), transparent 55%);
+}
+.hero-text{position:relative;z-index:1;}
+.hero-text .eyebrow{color:var(--amber-pale);font-weight:700;font-size:.95rem;margin-bottom:8px;}
+.hero-text h1{color:#fff;font-size:2rem;margin-bottom:10px;}
+.hero-text p{color:#dff2ee;max-width:46ch;}
+.hero-equation{
+  position:relative;z-index:1;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);
+  border-radius:16px;padding:26px;text-align:center;
+  font-family:'Cairo',sans-serif;font-weight:800;font-size:1.9rem;color:#fff;
+  backdrop-filter:blur(2px);
+}
+.hero-equation small{display:block;font-family:'Tajawal',sans-serif;font-weight:500;font-size:.85rem;color:var(--amber-pale);margin-top:10px;}
+
+/* ============ بطاقات الشرح ============ */
+.lesson-block{margin-bottom:26px;}
+.lesson-title{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--line);
+}
+.lesson-title .num{
+  width:36px;height:36px;border-radius:10px;background:var(--teal);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-family:'Cairo',sans-serif;font-weight:800;flex:none;
+}
+.lesson-title h2{margin:0;font-size:1.35rem;}
+
+.card{
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:16px;
+  box-shadow:var(--shadow);
+}
+.card h3{font-size:1.08rem;color:var(--teal-deep);display:flex;align-items:center;gap:8px;}
+.rule-box{
+  background:var(--teal-pale);border-right:5px solid var(--teal);
+  border-radius:10px;padding:16px 20px;margin:14px 0;
+  font-family:'Cairo',sans-serif;font-weight:700;font-size:1.15rem;color:var(--teal-deep);
+  text-align:center;
+}
+.note-box{
+  background:var(--amber-pale);border-right:5px solid var(--amber);
+  border-radius:10px;padding:14px 18px;margin:14px 0;color:#5c3a05;
+}
+.note-box b{color:var(--amber);}
+.example-box{
+  background:var(--rose-pale);border-right:5px solid var(--rose);
+  border-radius:10px;padding:16px 20px;margin:14px 0;
+}
+.example-box .tag{
+  display:inline-block;font-family:'Cairo',sans-serif;font-weight:800;font-size:.8rem;
+  background:var(--rose);color:#fff;border-radius:999px;padding:3px 12px;margin-bottom:8px;
+}
+.eq{font-family:'Cairo',sans-serif;direction:ltr;display:inline-block;font-weight:700;}
+.math-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96rem;}
+.math-table th,.math-table td{border:1px solid var(--line);padding:9px 12px;text-align:center;}
+.math-table th{background:var(--teal-pale);color:var(--teal-deep);font-family:'Cairo',sans-serif;}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+.chip{background:var(--teal-pale);color:var(--teal-deep);border-radius:8px;padding:7px 12px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.92rem;direction:ltr;}
+.vocab-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.vocab-row:last-child{border-bottom:none;}
+
+/* ============ التبويبات (Review / Quiz) ============ */
+.subtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+.subtab-btn{
+  background:var(--paper-raised);border:1px solid var(--line);color:var(--ink-soft);
+  padding:9px 16px;border-radius:999px;font-weight:700;font-size:.92rem;
+  transition:all .15s;
+}
+.subtab-btn:hover{border-color:var(--teal);color:var(--teal);}
+.subtab-btn.active{background:var(--teal);border-color:var(--teal);color:#fff;}
+.subview{display:none;}
+.subview.active{display:block;animation:fadeUp .35s ease;}
+
+/* ============ أسئلة المراجعة ============ */
+.q-card{
+  background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);
+}
+.q-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;}
+.q-index{
+  flex:none;width:30px;height:30px;border-radius:8px;background:var(--teal-pale);color:var(--teal-deep);
+  display:flex;align-items:center;justify-content:center;font-family:'Cairo',sans-serif;font-weight:800;font-size:.9rem;
+}
+.q-text{font-weight:700;font-size:1.02rem;color:var(--ink);}
+.tf-options{display:flex;gap:10px;margin-inline-start:40px;}
+.tf-btn{
+  padding:8px 22px;border-radius:8px;border:1.5px solid var(--line);background:var(--paper);
+  font-weight:700;color:var(--ink-soft);
+}
+.tf-btn.selected-true{border-color:var(--good);background:var(--good-pale);color:var(--good);}
+.tf-btn.selected-false{border-color:var(--bad);background:var(--bad-pale);color:var(--bad);}
+.mcq-options{display:flex;flex-direction:column;gap:8px;margin-inline-start:40px;}
+.mcq-opt{
+  display:flex;align-items:center;gap:10px;padding:9px 14px;border:1.5px solid var(--line);
+  border-radius:9px;background:var(--paper);transition:all .15s;
+}
+.mcq-opt:hover{border-color:var(--teal);}
+.mcq-opt input{accent-color:var(--teal);}
+.mcq-opt.selected{border-color:var(--teal);background:var(--teal-pale);}
+.blank-input,.short-input{
+  margin-inline-start:40px;width:calc(100% - 40px);max-width:420px;
+  padding:9px 14px;border:1.5px solid var(--line);border-radius:9px;background:var(--paper);
+  font-size:.98rem;color:var(--ink);
+}
+.blank-input:focus,.short-input:focus{outline:none;border-color:var(--teal);}
+.reveal-btn{
+  margin:14px 0 0 40px;background:var(--teal-deep);color:#fff;border:none;
+  padding:8px 18px;border-radius:8px;font-weight:700;font-size:.88rem;
+}
+.reveal-btn:hover{background:var(--teal);}
+.answer-panel{
+  margin:12px 0 0 40px;padding:12px 16px;border-radius:9px;
+  background:var(--good-pale);border-right:4px solid var(--good);display:none;color:#0d4a2a;
+}
+.answer-panel.show{display:block;}
+.answer-panel b{font-family:'Cairo',sans-serif;}
+
+/* ============ زر عام ============ */
+.btn{
+  background:var(--teal);color:#fff;border:none;padding:12px 26px;border-radius:10px;
+  font-weight:700;font-size:1rem;box-shadow:0 6px 16px -6px rgba(15,118,110,.5);
+  transition:transform .15s, background .15s;
+}
+.btn:hover{background:var(--teal-deep);transform:translateY(-1px);}
+.btn:disabled{background:#b7bdb9;box-shadow:none;cursor:not-allowed;transform:none;}
+.btn.amber{background:var(--amber);box-shadow:0 6px 16px -6px rgba(200,114,11,.5);}
+.btn.amber:hover{background:#a35c08;}
+.btn.outline{background:transparent;color:var(--teal);border:1.5px solid var(--teal);box-shadow:none;}
+.btn.outline:hover{background:var(--teal-pale);color:var(--teal-deep);}
+
+/* ============ الاختبار: التسجيل ============ */
+.gate{
+  max-width:460px;margin:30px auto;background:var(--paper-raised);border:1px solid var(--line);
+  border-radius:18px;padding:34px 30px;box-shadow:var(--shadow);text-align:center;
+}
+.gate h2{margin-bottom:6px;}
+.gate p.sub{color:var(--ink-soft);margin-bottom:22px;}
+.field{text-align:right;margin-bottom:16px;}
+.field label{display:block;font-weight:700;margin-bottom:6px;font-size:.92rem;color:var(--ink-soft);}
+.field input{
+  width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:9px;font-size:.98rem;
+  background:var(--paper);
+}
+.field input:focus{outline:none;border-color:var(--teal);}
+.field .err{color:var(--bad);font-size:.82rem;margin-top:5px;display:none;}
+.field.invalid input{border-color:var(--bad);}
+.field.invalid .err{display:block;}
+
+/* ============ الاختبار: أثناء الحل ============ */
+.quiz-header{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+  background:var(--teal-deep);color:#fff;border-radius:14px;padding:16px 22px;margin-bottom:22px;
+}
+.quiz-header .who{font-family:'Cairo',sans-serif;font-weight:700;}
+.timer{
+  font-family:'Cairo',sans-serif;font-weight:800;font-size:1.2rem;
+  background:rgba(255,255,255,.14);padding:6px 18px;border-radius:999px;
+}
+.progress-bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:24px;}
+.progress-fill{height:100%;background:var(--amber);width:0%;transition:width .3s;}
+
+/* ============ نتيجة الاختبار ============ */
+.result-card{
+  max-width:520px;margin:20px auto;text-align:center;background:var(--paper-raised);
+  border:1px solid var(--line);border-radius:18px;padding:36px 30px;box-shadow:var(--shadow);
+}
+.score-circle{
+  width:140px;height:140px;border-radius:50%;margin:0 auto 18px;
+  background:conic-gradient(var(--teal) calc(var(--pct)*1%), var(--line) 0);
+  display:flex;align-items:center;justify-content:center;
+}
+.score-circle span{
+  width:112px;height:112px;border-radius:50%;background:var(--paper-raised);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'Cairo',sans-serif;font-weight:900;font-size:1.7rem;color:var(--teal-deep);
+}
+.score-circle span small{font-family:'Tajawal',sans-serif;font-weight:500;font-size:.7rem;color:var(--ink-soft);}
+.result-stats{display:flex;justify-content:center;gap:26px;margin:18px 0;flex-wrap:wrap;}
+.result-stats div{text-align:center;}
+.result-stats .n{font-family:'Cairo',sans-serif;font-weight:800;font-size:1.3rem;}
+.result-stats .l{font-size:.82rem;color:var(--ink-soft);}
+
+/* ============ لوحة المعلم ============ */
+.teacher-gate{max-width:380px;margin:60px auto;text-align:center;}
+.dash-table-wrap{overflow-x:auto;background:var(--paper-raised);border-radius:var(--radius);border:1px solid var(--line);}
+table.dash{width:100%;border-collapse:collapse;font-size:.88rem;min-width:920px;}
+table.dash th,table.dash td{border:1px solid var(--line);padding:9px 10px;text-align:center;white-space:nowrap;}
+table.dash th{background:var(--teal-deep);color:#fff;font-family:'Cairo',sans-serif;position:sticky;top:0;}
+table.dash tr:nth-child(even){background:var(--teal-pale);}
+.dash-actions{display:flex;gap:10px;margin:18px 0;flex-wrap:wrap;}
+.empty-note{padding:40px 20px;text-align:center;color:var(--ink-soft);}
+
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.78rem;font-weight:700;}
+.badge.good{background:var(--good-pale);color:var(--good);}
+.badge.bad{background:var(--bad-pale);color:var(--bad);}
+
+/* ============ تجاوب الشاشات ============ */
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr;}
+  .hero-equation{font-size:1.4rem;}
+}
+@media (max-width:600px){
+  .tf-options,.mcq-options,.blank-input,.short-input,.reveal-btn,.answer-panel{margin-inline-start:0;}
+  .q-head{flex-direction:column;}
+  .wrap{padding:20px 14px 60px;}
+  .hero{padding:26px 20px;}
+  .nav-links{width:100%;justify-content:center;}
+}
+footer{text-align:center;color:var(--ink-soft);font-size:.85rem;padding:20px;}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="brand"><span class="mark">Xⁿ</span> منصة الأسس التفاعلية</div>
+    <div class="nav-links">
+      <button class="nav-btn active" data-view="explain">📘 الشرح</button>
+      <button class="nav-btn" data-view="review">📝 المراجعة</button>
+      <button class="nav-btn" data-view="quiz">🎓 الاختبار</button>
+      <button class="nav-btn teacher" data-view="teacher">👨‍🏫 لوحة المعلم</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============ قسم الشرح ============ -->
+  <section id="view-explain" class="view active">
+    <div class="hero">
+      <div class="hero-text">
+        <div class="eyebrow">الوحدة الأولى — الأعداد والعمليات عليها</div>
+        <h1>قوى الأسس والمعادلات الأسية</h1>
+        <p>الصف الثالث الإعدادي — الفصل الدراسي الأول. في هذا الدرس نتعرف على قانون قوة القوة، وقوانين ضرب وقسمة القوى، وكيف نستخدمها لحل المعادلات الأسية في مواقف حياتية حقيقية.</p>
+      </div>
+      <div class="hero-equation">
+        (aᵐ)ⁿ = aᵐ ˣ ⁿ
+        <small>لإيجاد قوة القوة، نضرب الأسين</small>
+      </div>
+    </div>
+
+    <!-- الدرس الأول -->
+    <div class="lesson-block">
+      <div class="lesson-title"><span class="num">1</span><h2>الدرس 1-1: قُوَى القُوَى (Powers of Powers)</h2></div>
+
+      <div class="card">
+        <h3>🔑 معلومة سابقة: قوانين الأسس الأساسية</h3>
+        <p>لأي عددين حقيقيين a ، b حيث a≠0, b≠0 وأي عددين صحيحين m ، n يكون:</p>
+        <div class="chip-row">
+          <span class="chip">aᵐ × aⁿ = aᵐ⁺ⁿ</span>
+          <span class="chip">aᵐ ÷ aⁿ = aᵐ⁻ⁿ</span>
+          <span class="chip">(a×b)ᵐ = aᵐ × bᵐ</span>
+          <span class="chip">(a/b)ᵐ = aᵐ/bᵐ</span>
+          <span class="chip">a⁻ⁿ = 1/aⁿ</span>
+          <span class="chip">a⁰ = 1</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📐 قانون قوة القوة</h3>
+        <p>عند رفع قوة إلى قوة أخرى، مثل (2³)⁴، فإننا نكرر الأساس 2³ أربع مرات ونجمع الأسس:</p>
+        <p class="eq" style="display:block;text-align:center;font-size:1.15rem;">(2³)⁴ = 2³×2³×2³×2³ = 2³⁺³⁺³⁺³ = 2¹²</p>
+        <p>ونلاحظ أن 12 = 3 × 4 (حاصل ضرب الأسين الأصليين)، أي أن إيجاد قوة القوة يكون بضرب الأسين:</p>
+        <div class="rule-box">لأي عدد حقيقي a لا يساوي الصفر، وعددين صحيحين m ، n يكون: (aᵐ)ⁿ = aᵐˣⁿ</div>
+        <p>مثال: (5⁴)² = 5⁴ˣ² = 5⁸ &nbsp;&nbsp;|&nbsp;&nbsp; (7⁻²)⁵ = 7⁻²ˣ⁵ = 7⁻¹⁰</p>
+      </div>
+
+      <div class="card">
+        <h3>✖️ قانون حاصل ضرب قوتين لهما نفس الأس</h3>
+        <div class="rule-box">(aᵐ × bⁿ)ᵏ = aᵐᵏ × bⁿᵏ</div>
+        <p>مثال: (2³ × 3)⁴ = 2³ˣ⁴ × 3¹ˣ⁴ = 2¹² × 3⁴</p>
+      </div>
+
+      <div class="card">
+        <h3>➗ قانون خارج قسمة قوتين</h3>
+        <div class="rule-box">(aᵐ/bⁿ)ᵏ = aᵐᵏ/bⁿᵏ</div>
+        <p>مثال: (2³/7²)⁵ = 2¹⁵/7¹⁰</p>
+      </div>
+
+      <div class="note-box">
+        <b>لاحظ أن:</b> (a+b)ⁿᵏ ≠ aᵐᵏ + bⁿᵏ ، و (a−b)ⁿᵏ ≠ aᵐᵏ − bⁿᵏ — قوانين القوى تنطبق على الضرب والقسمة فقط، وليس على الجمع أو الطرح.
+      </div>
+      <div class="note-box">
+        <b>إشارة الأساس السالب:</b> (−a)ⁿ = aⁿ إذا كان n عددًا صحيحًا زوجيًا، بينما (−a)ⁿ = −aⁿ إذا كان n عددًا صحيحًا فرديًا.
+      </div>
+
+      <div class="example-box">
+        <span class="tag">مثال محلول 1</span>
+        <p>اختصر: (2¹¹)² × 2³ ÷ [(2⁶)³ × 2⁴]</p>
+        <p class="eq" style="display:block;">= 2²² × 2³ ÷ (2¹⁸ × 2⁴) = 2²⁵ ÷ 2²² = 2³ = 8</p>
+      </div>
+      <div class="example-box">
+        <span class="tag">مثال محلول 2</span>
+        <p>غرفة مربعة الشكل طول ضلعها 2x³y² وحدة طول، وبلاطة التبليط طول ضلعها xy² وحدة طول. عدد البلاطات اللازمة = مساحة الغرفة ÷ مساحة البلاطة:</p>
+        <p class="eq" style="display:block;">(2x³y²)² ÷ (xy²)² = 4x⁶y⁴ ÷ x²y⁴ = 4x⁴ بلاطة</p>
+      </div>
+    </div>
+
+    <!-- الدرس الثاني -->
+    <div class="lesson-block">
+      <div class="lesson-title"><span class="num">2</span><h2>الدرس 1-2: المعادلات الأسية (Exponential Equations)</h2></div>
+
+      <div class="card">
+        <h3>❓ ما هي المعادلة الأسية؟</h3>
+        <p>المعادلة الأسية هي معادلة تحتوي على متغيّر في الأس، مثل: 2ˣ = 8 &nbsp; أو &nbsp; 3ˣ⁻⁴ = 1/9. أما x² = 9 أو x − 7 = 3² فهذه معادلات غير أسية لأن المتغير فيها ليس في الأس.</p>
+        <p>سوف نقتصر دراستنا على المعادلة الأسية في الصورة: <span class="eq" style="font-weight:800;">aˣ = b</span> حيث a ≠ 1 ، a &gt; 0.</p>
+      </div>
+
+      <div class="card">
+        <h3>🧮 حل المعادلات الأسية</h3>
+        <p>لحل المعادلات الأسية نستخدم خاصية تساوي القوى:</p>
+        <div class="rule-box">إذا كان aˣ = aʸ حيث a ≠ 1 ، a &gt; 0 &nbsp; فإن: x = y</div>
+        <p>أي أننا نحوّل طرفي المعادلة إلى نفس الأساس، ثم نساوي بين الأسين.</p>
+      </div>
+
+      <div class="example-box">
+        <span class="tag">أمثلة سريعة</span>
+        <p>• إذا كان 3ˣ = 3⁴ فإن x = 4</p>
+        <p>• إذا كان 5ˣ = 125 فإن 5ˣ = 5³ (بالتحليل: 125 = 5×5×5) ومنها x = 3</p>
+      </div>
+
+      <div class="example-box">
+        <span class="tag">مثال محلول 5 — صندوق كرتوني</span>
+        <p>صندوق متوازي مستطيلات حجمه 1 متر مكعب، أبعاده: h = 2ˣ ، w = 2ˣ⁺¹ ، l = 2ˣ⁺²</p>
+        <p class="eq" style="display:block;">2ˣ⁺² × 2ˣ⁺¹ × 2ˣ = 1 ⟹ 2³ˣ⁺³ = 2⁰ ⟹ 3x + 3 = 0 ⟹ x = −1</p>
+        <p>ومنها: l = 2 متر ، w = 1 متر ، h = 1/2 متر</p>
+      </div>
+
+      <div class="card">
+        <h3>📖 المفردات</h3>
+        <div class="vocab-row"><span>Exponent</span><span>أُسّ</span></div>
+        <div class="vocab-row"><span>Base</span><span>أساس</span></div>
+        <div class="vocab-row"><span>Power</span><span>قوة</span></div>
+        <div class="vocab-row"><span>Power of a power</span><span>قوة القوة</span></div>
+        <div class="vocab-row"><span>Exponential equation</span><span>معادلة أسية</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ قسم المراجعة ============ -->
+  <section id="view-review" class="view">
+    <h1 style="margin-bottom:4px;">📝 المراجعة</h1>
+    <p style="color:var(--ink-soft);margin-bottom:22px;">أجب عن الأسئلة ثم اضغط «إظهار الإجابة الصحيحة» للتحقق من فهمك.</p>
+    <div class="subtabs">
+      <button class="subtab-btn active" data-sub="tf">✔️✖️ صح أم خطأ</button>
+      <button class="subtab-btn" data-sub="mcq">🔘 اختيار من متعدد</button>
+      <button class="subtab-btn" data-sub="blank">✏️ أكمل الفراغ</button>
+      <button class="subtab-btn" data-sub="short">💬 إجابة قصيرة</button>
+    </div>
+    <div id="sub-tf" class="subview active"></div>
+    <div id="sub-mcq" class="subview"></div>
+    <div id="sub-blank" class="subview"></div>
+    <div id="sub-short" class="subview"></div>
+  </section>
+
+  <!-- ============ قسم الاختبار ============ -->
+  <section id="view-quiz" class="view">
+
+    <div id="quiz-gate" class="gate">
+      <h2>🎓 اختبار الوحدة</h2>
+      <p class="sub">سجّل بياناتك لبدء الاختبار (10 أسئلة)</p>
+      <div class="field" id="f-name">
+        <label>اسم الطالب</label>
+        <input type="text" id="in-name" placeholder="اكتب اسمك بالكامل">
+        <div class="err">من فضلك أدخل الاسم كاملاً (حرفين على الأقل)</div>
+      </div>
+      <div class="field" id="f-email">
+        <label>البريد الإلكتروني</label>
+        <input type="email" id="in-email" placeholder="example@email.com">
+        <div class="err">من فضلك أدخل بريدًا إلكترونيًا صحيحًا</div>
+      </div>
+      <button class="btn amber" id="btn-start-quiz" disabled style="width:100%;">ابدأ الاختبار</button>
+    </div>
+
+    <div id="quiz-body" style="display:none;">
+      <div class="quiz-header">
+        <div class="who">👋 <span id="qh-name"></span></div>
+        <div class="timer">⏱ <span id="qh-timer">00:00</span></div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="qh-progress"></div></div>
+      <div id="quiz-questions"></div>
+      <button class="btn amber" id="btn-submit-quiz" style="width:100%;margin-top:10px;">إنهاء الاختبار وعرض النتيجة</button>
+    </div>
+
+    <div id="quiz-result" style="display:none;">
+      <div class="result-card">
+        <h2>🎉 نتيجتك</h2>
+        <div class="score-circle" id="score-circle" style="--pct:0;"><span id="score-pct">0%</span></div>
+        <div class="result-stats">
+          <div><div class="n" id="rs-correct">0</div><div class="l">إجابات صحيحة</div></div>
+          <div><div class="n" id="rs-wrong">0</div><div class="l">إجابات خاطئة</div></div>
+          <div><div class="n" id="rs-time">0:00</div><div class="l">الزمن المستغرق</div></div>
+        </div>
+        <button class="btn outline" id="btn-retry-quiz">إعادة الاختبار</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ لوحة المعلم ============ -->
+  <section id="view-teacher" class="view">
+    <div id="teacher-gate" class="teacher-gate">
+      <h2>🔐 دخول المعلم</h2>
+      <p style="color:var(--ink-soft);margin-bottom:16px;">كلمة المرور الافتراضية: <b>teacher123</b></p>
+      <input type="password" id="in-teacher-pass" class="short-input" style="margin:0 0 14px;width:100%;" placeholder="كلمة المرور">
+      <div id="teacher-pass-err" style="color:var(--bad);font-size:.85rem;margin-bottom:10px;display:none;">كلمة المرور غير صحيحة</div>
+      <button class="btn" id="btn-teacher-login" style="width:100%;">دخول</button>
+    </div>
+
+    <div id="teacher-dash" style="display:none;">
+      <h1 style="margin-bottom:4px;">👨‍🏫 لوحة تحكم المعلم</h1>
+      <p style="color:var(--ink-soft);margin-bottom:18px;">نتائج جميع الطلاب الذين أدّوا الاختبار</p>
+      <div class="dash-actions">
+        <button class="btn" id="btn-export-xlsx">📊 تصدير Excel</button>
+        <button class="btn amber" id="btn-export-docx">📄 تصدير Word</button>
+        <button class="btn outline" id="btn-clear-results">🗑 مسح جميع النتائج</button>
+      </div>
+      <div class="dash-table-wrap">
+        <table class="dash">
+          <thead>
+            <tr>
+              <th>اسم الطالب</th><th>البريد الإلكتروني</th><th>الدرجة</th><th>الدرجة الكلية</th>
+              <th>الإجابات الصحيحة</th><th>الإجابات الخاطئة</th><th>وقت البداية</th><th>وقت الإنهاء</th><th>المدة</th>
+            </tr>
+          </thead>
+          <tbody id="dash-tbody"></tbody>
+        </table>
+      </div>
+      <div id="dash-empty" class="empty-note" style="display:none;">لا توجد نتائج بعد. سيظهر هنا كل طالب بعد إنهاء الاختبار.</div>
+    </div>
+  </section>
+
+</div>
+
+<footer>منصة الأسس التفاعلية — الوحدة الأولى: الأعداد والعمليات عليها · للاستخدام التعليمي</footer>
+
+<script>
+/* ================================================================
+   بيانات المحتوى: أسئلة المراجعة والاختبار
+   ================================================================ */
+const TF_QUESTIONS = [
+  {text:"(x³)² يساوي x⁶", answer:true, explain:"صحيحة: نضرب الأسين 3×2=6، فتكون (x³)²=x⁶."},
+  {text:"(9²)² يساوي 3⁸", answer:true, explain:"صحيحة: 9=3² لذا (9²)²=(3²)²×2=3⁸، أو (9²)²=9⁴=3⁸."},
+  {text:"(2²)³ يساوي 2^(2³) أي 2⁸", answer:false, explain:"خطأ: (2²)³ = 2^(2×3) = 2⁶ وليس 2⁸؛ لا يجوز الخلط بين ضرب الأسين ورفع الأس لأس آخر."},
+  {text:"a⁰ = 1 لأي عدد حقيقي a لا يساوي صفرًا", answer:true, explain:"صحيحة: هذه إحدى قوانين الأسس الأساسية."},
+  {text:"(a+b)ⁿ تساوي دائمًا aⁿ+bⁿ", answer:false, explain:"خطأ: قوانين القوى تنطبق على الضرب والقسمة فقط، وليس على الجمع، فـ(a+b)ⁿ ≠ aⁿ+bⁿ بشكل عام."},
+  {text:"(−2)⁴ = 2⁴ لأن الأس عدد زوجي", answer:true, explain:"صحيحة: (−a)ⁿ = aⁿ إذا كان n عددًا صحيحًا زوجيًا."},
+  {text:"إذا كان aˣ = aʸ حيث a≠1 ، a>0 فإن x لا تساوي بالضرورة y", answer:false, explain:"خطأ: خاصية تساوي القوى تنص على أنه إذا تساوى الأساسان (وليسا 1) تساوى الأسّان، أي x = y."}
+];
+
+const MCQ_QUESTIONS = [
+  {text:"إذا كان 2ˣ = 8 فما قيمة x؟", options:["1","2","3","4"], correct:2, explain:"8 = 2³ ، وبمساواة الأسين نجد x = 3."},
+  {text:"إذا كان 9ˣ = 27 فما قيمة x؟", options:["2/3","3/2","1/3","3"], correct:1, explain:"9=3² ، 27=3³ ⟹ 3²ˣ=3³ ⟹ 2x=3 ⟹ x=3/2."},
+  {text:"أي مما يأتي يساوي (a²)⁴ × a⁵ ؟", options:["a¹¹","a¹³","a⁴⁰","a³⁰"], correct:1, explain:"(a²)⁴ = a⁸ ، ثم a⁸ × a⁵ = a⁸⁺⁵ = a¹³."},
+  {text:"ناتج (−2a²)³ ÷ (2a) في أبسط صورة هو:", options:["−4a⁵","4a⁵","−8a⁵","−4a⁶"], correct:0, explain:"(−2a²)³ = −8a⁶ ، ثم −8a⁶ ÷ 2a = −4a⁵."},
+  {text:"إذا كان 2ᵃ + 2ᵃ + 2ᵃ = 24 فإن قيمة a تساوي:", options:["2","3","4","8"], correct:1, explain:"3×2ᵃ = 24 ⟹ 2ᵃ = 8 = 2³ ⟹ a = 3."},
+  {text:"إذا كان 5ˣ⁻¹ = 3ˣ⁻¹ فما قيمة x؟", options:["0","1","3","5"], correct:1, explain:"عندما يكون الأس صفرًا (x−1=0 أي x=1) فإن كلا الطرفين يساوي 1 بغض النظر عن الأساس."}
+];
+
+const BLANK_QUESTIONS = [
+  {text:"إذا كان 7ˣ⁺¹ = 5ˣ⁺¹ فإن X = ____", answer:"-1", explain:"عندما يتساوى طرفا معادلة أسية بأساسين مختلفين وقيمتهما متساوية لكل x، يكون ذلك عند X+1=0 أي X = −1."},
+  {text:"إذا كان 5ˣ⁻³ = 1 فإن X = ____", answer:"3", explain:"5ˣ⁻³ = 5⁰ = 1 ⟹ X−3 = 0 ⟹ X = 3."},
+  {text:"لأي عدد حقيقي a≠0 وعددين صحيحين m,n : (aᵐ)ⁿ = ____", answer:"a^(m*n)", explain:"قانون قوة القوة: (aᵐ)ⁿ = aᵐˣⁿ (نضرب الأسين)."},
+  {text:"(a×b)ᵐ = aᵐ × ____", answer:"b^m", explain:"قانون توزيع القوة على حاصل الضرب: (a×b)ᵐ = aᵐ × bᵐ."},
+  {text:"إذا كان (−a)ⁿ سالبة القيمة، فإن n عدد صحيح ____", answer:"فردي", explain:"(−a)ⁿ = −aⁿ فقط إذا كان n عددًا صحيحًا فرديًا."}
+];
+
+const SHORT_QUESTIONS = [
+  {text:"وضّح بجملة واحدة قانون «قوة القوة» وكيف نطبقه.", model:"عند رفع قوة إلى قوة أخرى (aᵐ)ⁿ، نحصل على نفس الأساس مرفوعًا لحاصل ضرب الأسين، أي (aᵐ)ⁿ = aᵐˣⁿ."},
+  {text:"اذكر الفرق بين المعادلة الأسية والمعادلة غير الأسية مع مثال.", model:"المعادلة الأسية يكون فيها المتغير في الأس مثل 2ˣ=8، بينما المعادلة غير الأسية يكون المتغير في القاعدة أو خارج الأس مثل x²=9."},
+  {text:"كيف نحل المعادلة الأسية aˣ = aʸ؟", model:"نستخدم خاصية تساوي القوى: بما أن الأساسين متساويان (a≠1, a>0) فإن الأسين متساويان أيضًا، أي x = y."},
+  {text:"اشرح متى يكون (−a)ⁿ موجبًا ومتى يكون سالبًا.", model:"يكون (−a)ⁿ موجبًا (يساوي aⁿ) عندما يكون n عددًا زوجيًا، ويكون سالبًا (يساوي −aⁿ) عندما يكون n عددًا فرديًا."},
+  {text:"لماذا لا يصح أن نقول (a+b)ᵐ = aᵐ+bᵐ؟", model:"لأن قوانين القوى (قوة القوة، حاصل الضرب، خارج القسمة) تنطبق فقط على عمليتي الضرب والقسمة، ولا تنطبق على الجمع أو الطرح."}
+];
+
+// أسئلة الاختبار (اختيار من متعدد + صح/خطأ) لضمان التصحيح التلقائي
+const QUIZ_QUESTIONS = [
+  {type:"mcq", text:"إذا كان (aᵐ)ⁿ فإن هذا يساوي:", options:["aᵐ⁺ⁿ","aᵐ⁻ⁿ","aᵐˣⁿ","aᵐ÷ⁿ"], correct:2},
+  {type:"mcq", text:"إذا كان 3ˣ = 3⁴ فإن قيمة x هي:", options:["3","4","7","12"], correct:1},
+  {type:"tf", text:"(2²)³ = 2⁶", correct:true},
+  {type:"mcq", text:"(a×b)ᵐ تساوي:", options:["aᵐ+bᵐ","aᵐ×bᵐ","aᵐ−bᵐ","aᵐ÷bᵐ"], correct:1},
+  {type:"tf", text:"a⁰ = 0 لأي عدد حقيقي a لا يساوي صفرًا", correct:false},
+  {type:"mcq", text:"إذا كان 5ˣ = 125 فإن قيمة x هي:", options:["2","3","4","5"], correct:1},
+  {type:"tf", text:"(−3)² = 9 لأن الأس عدد زوجي", correct:true},
+  {type:"mcq", text:"(2¹¹)² × 2³ تساوي:", options:["2¹⁶","2²⁵","2²²","2³³"], correct:1},
+  {type:"tf", text:"يمكن حل المعادلة aˣ=aʸ بمساواة الأسين فقط إذا كان a≠1 و a>0", correct:true},
+  {type:"mcq", text:"إذا كان 9ˣ⁺¹=1 فإن قيمة x هي:", options:["0","-1","1","9"], correct:1}
+];
+
+/* ================================================================
+   التنقل بين الأقسام الرئيسية
+   ================================================================ */
+document.querySelectorAll(".nav-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+    document.getElementById("view-"+btn.dataset.view).classList.add("active");
+  });
+});
+
+/* التنقل بين تبويبات المراجعة */
+document.querySelectorAll(".subtab-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".subtab-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".subview").forEach(v=>v.classList.remove("active"));
+    document.getElementById("sub-"+btn.dataset.sub).classList.add("active");
+  });
+});
+
+/* ================================================================
+   بناء أسئلة المراجعة
+   ================================================================ */
+function buildTF(){
+  const box=document.getElementById("sub-tf");
+  TF_QUESTIONS.forEach((q,i)=>{
+    const card=document.createElement("div");
+    card.className="q-card";
+    card.innerHTML=`
+      <div class="q-head"><div class="q-index">${i+1}</div><div class="q-text">${q.text}</div></div>
+      <div class="tf-options">
+        <button class="tf-btn" data-val="true">✔️ صح</button>
+        <button class="tf-btn" data-val="false">✖️ خطأ</button>
+      </div>
+      <button class="reveal-btn">إظهار الإجابة الصحيحة</button>
+      <div class="answer-panel"><b>${q.answer?"الإجابة الصحيحة: صح":"الإجابة الصحيحة: خطأ"}</b><br>${q.explain}</div>
+    `;
+    const tfBtns=card.querySelectorAll(".tf-btn");
+    tfBtns.forEach(b=>b.addEventListener("click",()=>{
+      tfBtns.forEach(x=>x.classList.remove("selected-true","selected-false"));
+      b.classList.add(b.dataset.val==="true"?"selected-true":"selected-false");
+    }));
+    card.querySelector(".reveal-btn").addEventListener("click",()=>{
+      card.querySelector(".answer-panel").classList.toggle("show");
+    });
+    box.appendChild(card);
+  });
+}
+
+function buildMCQ(){
+  const box=document.getElementById("sub-mcq");
+  MCQ_QUESTIONS.forEach((q,i)=>{
+    const card=document.createElement("div");
+    card.className="q-card";
+    let optsHtml=q.options.map((op,oi)=>`
+      <label class="mcq-opt">
+        <input type="radio" name="mcq${i}" value="${oi}">
+        <span>${op}</span>
+      </label>`).join("");
+    card.innerHTML=`
+      <div class="q-head"><div class="q-index">${i+1}</div><div class="q-text">${q.text}</div></div>
+      <div class="mcq-options">${optsHtml}</div>
+      <button class="reveal-btn">إظهار الإجابة الصحيحة</button>
+      <div class="answer-panel"><b>الإجابة الصحيحة: ${q.options[q.correct]}</b><br>${q.explain}</div>
+    `;
+    card.querySelectorAll(".mcq-opt input").forEach(inp=>{
+      inp.addEventListener("change",()=>{
+        card.querySelectorAll(".mcq-opt").forEach(o=>o.classList.remove("selected"));
+        inp.closest(".mcq-opt").classList.add("selected");
+      });
+    });
+    card.querySelector(".reveal-btn").addEventListener("click",()=>{
+      card.querySelector(".answer-panel").classList.toggle("show");
+    });
+    box.appendChild(card);
+  });
+}
+
+function buildBlank(){
+  const box=document.getElementById("sub-blank");
+  BLANK_QUESTIONS.forEach((q,i)=>{
+    const card=document.createElement("div");
+    card.className="q-card";
+    card.innerHTML=`
+      <div class="q-head"><div class="q-index">${i+1}</div><div class="q-text">${q.text}</div></div>
+      <input type="text" class="blank-input" placeholder="اكتب إجابتك هنا">
+      <button class="reveal-btn">إظهار الإجابة الصحيحة</button>
+      <div class="answer-panel"><b>الإجابة الصحيحة: ${q.answer}</b><br>${q.explain}</div>
+    `;
+    card.querySelector(".reveal-btn").addEventListener("click",()=>{
+      card.querySelector(".answer-panel").classList.toggle("show");
+    });
+    box.appendChild(card);
+  });
+}
+
+function buildShort(){
+  const box=document.getElementById("sub-short");
+  SHORT_QUESTIONS.forEach((q,i)=>{
+    const card=document.createElement("div");
+    card.className="q-card";
+    card.innerHTML=`
+      <div class="q-head"><div class="q-index">${i+1}</div><div class="q-text">${q.text}</div></div>
+      <textarea class="short-input" rows="3" placeholder="اكتب إجابتك هنا"></textarea>
+      <br><button class="reveal-btn">إظهار الإجابة النموذجية</button>
+      <div class="answer-panel"><b>إجابة نموذجية:</b><br>${q.model}</div>
+    `;
+    card.querySelector(".reveal-btn").addEventListener("click",()=>{
+      card.querySelector(".answer-panel").classList.toggle("show");
+    });
+    box.appendChild(card);
+  });
+}
+
+buildTF(); buildMCQ(); buildBlank(); buildShort();
+
+/* ================================================================
+   قسم الاختبار: التسجيل + المؤقت + التصحيح
+   ================================================================ */
+const inName=document.getElementById("in-name");
+const inEmail=document.getElementById("in-email");
+const btnStartQuiz=document.getElementById("btn-start-quiz");
+
+function validateEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+function checkGateValidity(){
+  const nameOk = inName.value.trim().length>=2;
+  const emailOk = validateEmail(inEmail.value.trim());
+  document.getElementById("f-name").classList.toggle("invalid", inName.value.length>0 && !nameOk);
+  document.getElementById("f-email").classList.toggle("invalid", inEmail.value.length>0 && !emailOk);
+  btnStartQuiz.disabled = !(nameOk && emailOk);
+}
+inName.addEventListener("input",checkGateValidity);
+inEmail.addEventListener("input",checkGateValidity);
+
+let quizState={};
+let timerInterval=null;
+
+btnStartQuiz.addEventListener("click",()=>{
+  quizState={
+    name:inName.value.trim(),
+    email:inEmail.value.trim(),
+    startTime:new Date(),
+    answers:new Array(QUIZ_QUESTIONS.length).fill(null)
+  };
+  document.getElementById("quiz-gate").style.display="none";
+  document.getElementById("quiz-body").style.display="block";
+  document.getElementById("quiz-result").style.display="none";
+  document.getElementById("qh-name").textContent=quizState.name;
+  renderQuizQuestions();
+  startTimer();
+});
+
+function startTimer(){
+  let seconds=0;
+  document.getElementById("qh-timer").textContent="00:00";
+  timerInterval=setInterval(()=>{
+    seconds++;
+    const m=String(Math.floor(seconds/60)).padStart(2,"0");
+    const s=String(seconds%60).padStart(2,"0");
+    document.getElementById("qh-timer").textContent=`${m}:${s}`;
+  },1000);
+}
+
+function updateQuizProgress(){
+  const answered=quizState.answers.filter(a=>a!==null).length;
+  const pct=Math.round(answered/QUIZ_QUESTIONS.length*100);
+  document.getElementById("qh-progress").style.width=pct+"%";
+}
+
+function renderQuizQuestions(){
+  const box=document.getElementById("quiz-questions");
+  box.innerHTML="";
+  QUIZ_QUESTIONS.forEach((q,i)=>{
+    const card=document.createElement("div");
+    card.className="q-card";
+    if(q.type==="mcq"){
+      let optsHtml=q.options.map((op,oi)=>`
+        <label class="mcq-opt">
+          <input type="radio" name="quiz${i}" value="${oi}">
+          <span>${op}</span>
+        </label>`).join("");
+      card.innerHTML=`<div class="q-head"><div class="q-index">${i+1}</div><div class="q-text">${q.text}</div></div>
+        <div class="mcq-options">${optsHtml}</div>`;
+      card.querySelectorAll(".mcq-opt input").forEach(inp=>{
+        inp.addEventListener("change",()=>{
+          card.querySelectorAll(".mcq-opt").forEach(o=>o.classList.remove("selected"));
+          inp.closest(".mcq-opt").classList.add("selected");
+          quizState.answers[i]=parseInt(inp.value);
+          updateQuizProgress();
+        });
+      });
+    }else{
+      card.innerHTML=`<div class="q-head"><div class="q-index">${i+1}</div><div class="q-text">${q.text}</div></div>
+        <div class="tf-options">
+          <button class="tf-btn" data-val="true">✔️ صح</button>
+          <button class="tf-btn" data-val="false">✖️ خطأ</button>
+        </div>`;
+      const tfBtns=card.querySelectorAll(".tf-btn");
+      tfBtns.forEach(b=>b.addEventListener("click",()=>{
+        tfBtns.forEach(x=>x.classList.remove("selected-true","selected-false"));
+        b.classList.add(b.dataset.val==="true"?"selected-true":"selected-false");
+        quizState.answers[i]=(b.dataset.val==="true");
+        updateQuizProgress();
+      }));
+    }
+    box.appendChild(card);
+  });
+  updateQuizProgress();
+}
+
+document.getElementById("btn-submit-quiz").addEventListener("click",()=>{
+  clearInterval(timerInterval);
+  const endTime=new Date();
+  let correct=0;
+  QUIZ_QUESTIONS.forEach((q,i)=>{
+    const given=quizState.answers[i];
+    if(given===null) return;
+    if(q.type==="mcq" && given===q.correct) correct++;
+    if(q.type==="tf" && given===q.correct) correct++;
+  });
+  const total=QUIZ_QUESTIONS.length;
+  const wrong=total-correct;
+  const durationSec=Math.round((endTime-quizState.startTime)/1000);
+
+  // حفظ النتيجة في التخزين المحلي
+  const results=JSON.parse(localStorage.getItem("quizResults")||"[]");
+  results.push({
+    name:quizState.name,
+    email:quizState.email,
+    score:correct,
+    total:total,
+    correct:correct,
+    wrong:wrong,
+    startTime:quizState.startTime.toISOString(),
+    endTime:endTime.toISOString(),
+    durationSec:durationSec
+  });
+  localStorage.setItem("quizResults", JSON.stringify(results));
+
+  // عرض النتيجة
+  document.getElementById("quiz-body").style.display="none";
+  document.getElementById("quiz-result").style.display="block";
+  const pct=Math.round(correct/total*100);
+  document.getElementById("score-circle").style.setProperty("--pct",pct);
+  document.getElementById("score-pct").innerHTML=`${pct}%<small>${correct} / ${total}</small>`;
+  document.getElementById("rs-correct").textContent=correct;
+  document.getElementById("rs-wrong").textContent=wrong;
+  const mm=String(Math.floor(durationSec/60)).padStart(2,"0");
+  const ss=String(durationSec%60).padStart(2,"0");
+  document.getElementById("rs-time").textContent=`${mm}:${ss}`;
+});
+
+document.getElementById("btn-retry-quiz").addEventListener("click",()=>{
+  inName.value=""; inEmail.value="";
+  checkGateValidity();
+  document.getElementById("quiz-result").style.display="none";
+  document.getElementById("quiz-gate").style.display="block";
+});
+
+/* ================================================================
+   لوحة تحكم المعلم
+   ================================================================ */
+const TEACHER_PASSWORD="teacher123";
+document.getElementById("btn-teacher-login").addEventListener("click",teacherLogin);
+document.getElementById("in-teacher-pass").addEventListener("keydown",e=>{ if(e.key==="Enter") teacherLogin(); });
+
+function teacherLogin(){
+  const val=document.getElementById("in-teacher-pass").value;
+  if(val===TEACHER_PASSWORD){
+    document.getElementById("teacher-gate").style.display="none";
+    document.getElementById("teacher-dash").style.display="block";
+    renderDashboard();
+  }else{
+    document.getElementById("teacher-pass-err").style.display="block";
+  }
+}
+
+function fmtDate(iso){
+  const d=new Date(iso);
+  return d.toLocaleString("ar-EG",{hour12:true,dateStyle:"short",timeStyle:"short"});
+}
+function fmtDuration(sec){
+  const m=Math.floor(sec/60), s=sec%60;
+  return `${m} د ${s} ث`;
+}
+
+function getResults(){ return JSON.parse(localStorage.getItem("quizResults")||"[]"); }
+
+function renderDashboard(){
+  const results=getResults();
+  const tbody=document.getElementById("dash-tbody");
+  tbody.innerHTML="";
+  document.getElementById("dash-empty").style.display = results.length===0 ? "block":"none";
+  document.querySelector(".dash-table-wrap").style.display = results.length===0 ? "none":"block";
+  results.forEach(r=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${r.name}</td>
+      <td>${r.email}</td>
+      <td>${r.score}</td>
+      <td>${r.total}</td>
+      <td><span class="badge good">${r.correct}</span></td>
+      <td><span class="badge bad">${r.wrong}</span></td>
+      <td>${fmtDate(r.startTime)}</td>
+      <td>${fmtDate(r.endTime)}</td>
+      <td>${fmtDuration(r.durationSec)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+document.getElementById("btn-clear-results").addEventListener("click",()=>{
+  if(confirm("هل أنت متأكد من مسح جميع نتائج الطلاب؟ لا يمكن التراجع عن هذا الإجراء.")){
+    localStorage.removeItem("quizResults");
+    renderDashboard();
+  }
+});
+
+/* تصدير Excel باستخدام مكتبة SheetJS */
+document.getElementById("btn-export-xlsx").addEventListener("click",()=>{
+  const results=getResults();
+  if(results.length===0){ alert("لا توجد نتائج لتصديرها بعد."); return; }
+  const rows=results.map(r=>({
+    "اسم الطالب":r.name,
+    "البريد الإلكتروني":r.email,
+    "الدرجة":r.score,
+    "الدرجة الكلية":r.total,
+    "الإجابات الصحيحة":r.correct,
+    "الإجابات الخاطئة":r.wrong,
+    "وقت البداية":fmtDate(r.startTime),
+    "وقت الإنهاء":fmtDate(r.endTime),
+    "المدة المستغرقة":fmtDuration(r.durationSec)
+  }));
+  const ws=XLSX.utils.json_to_sheet(rows);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"نتائج الطلاب");
+  XLSX.writeFile(wb,"نتائج_اختبار_الطلاب.xlsx");
+});
+
+/* تصدير Word باستخدام مكتبة docx.js */
+document.getElementById("btn-export-docx").addEventListener("click",async ()=>{
+  const results=getResults();
+  if(results.length===0){ alert("لا توجد نتائج لتصديرها بعد."); return; }
+  const { Document, Packer, Table, TableRow, TableCell, Paragraph, TextRun, WidthType, HeadingLevel } = docx;
+
+  const headers=["اسم الطالب","البريد الإلكتروني","الدرجة","الدرجة الكلية","الإجابات الصحيحة","الإجابات الخاطئة","وقت البداية","وقت الإنهاء","المدة"];
+  function headerCell(text){
+    return new TableCell({children:[new Paragraph({children:[new TextRun({text,bold:true})]})], width:{size:1500,type:WidthType.DXA}});
+  }
+  function dataCell(text){
+    return new TableCell({children:[new Paragraph(String(text))]});
+  }
+
+  const headerRow=new TableRow({children:headers.map(h=>headerCell(h))});
+  const dataRows=results.map(r=>new TableRow({children:[
+    dataCell(r.name), dataCell(r.email), dataCell(r.score), dataCell(r.total),
+    dataCell(r.correct), dataCell(r.wrong), dataCell(fmtDate(r.startTime)), dataCell(fmtDate(r.endTime)), dataCell(fmtDuration(r.durationSec))
+  ]}));
+
+  const table=new Table({rows:[headerRow,...dataRows], width:{size:100,type:WidthType.PERCENTAGE}});
+
+  const doc=new Document({
+    sections:[{
+      properties:{},
+      children:[
+        new Paragraph({text:"نتائج اختبار الطلاب", heading:HeadingLevel.HEADING_1}),
+        new Paragraph({text:"الوحدة الأولى — قوى الأسس والمعادلات الأسية", spacing:{after:200}}),
+        table
+      ]
+    }]
+  });
+
+  const blob=await Packer.toBlob(doc);
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download="نتائج_اختبار_الطلاب.docx";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
