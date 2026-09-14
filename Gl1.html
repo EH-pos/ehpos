@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ألعاب قوى الأسس والمعادلات الأسية | مركز الألعاب التعليمية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ نظام التصميم (Design Tokens) ============ */
+:root{
+  --ink:#173430; --ink-soft:#3f5b56;
+  --paper:#f6f4ee; --paper-raised:#ffffff;
+  --teal:#0f766e; --teal-deep:#0b4f4a; --teal-pale:#e3f1ef;
+  --amber:#c8720b; --amber-pale:#fbe9d2;
+  --rose:#a6335f; --rose-pale:#f7e3ec;
+  --blue:#1d4e89; --blue-pale:#e2ecf7;
+  --line:#e2ddd0;
+  --good:#1a7d4a; --good-pale:#e1f3e8;
+  --bad:#b3312c; --bad-pale:#fbe4e2;
+  --radius:14px;
+  --shadow:0 10px 30px -14px rgba(23,52,48,.25);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Tajawal',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{font-family:'Cairo',sans-serif;margin:0 0 .5em;color:var(--teal-deep);}
+p{margin:0 0 1em;}
+button{font-family:inherit;cursor:pointer;}
+input,textarea{font-family:inherit;}
+
+/* ============ شريط علوي ============ */
+.navbar{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,var(--teal-deep),var(--teal));box-shadow:var(--shadow);}
+.nav-inner{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.brand{display:flex;align-items:center;gap:10px;padding:14px 0;color:#fff;font-family:'Cairo',sans-serif;font-weight:800;font-size:1.1rem;}
+.brand .mark{width:38px;height:38px;border-radius:10px;background:var(--amber);display:flex;align-items:center;justify-content:center;font-family:'Cairo',sans-serif;font-weight:900;color:#2a1600;font-size:1.15rem;box-shadow:0 4px 10px rgba(0,0,0,.2);}
+.home-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#f2fbf9;padding:9px 18px;border-radius:999px;font-weight:700;}
+.home-btn:hover{background:rgba(255,255,255,.2);}
+
+.wrap{max-width:1180px;margin:0 auto;padding:32px 20px 80px;}
+.view{display:none;animation:fadeUp .4s ease;}
+.view.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ============ صفحة القائمة الرئيسية ============ */
+.hero{background:linear-gradient(135deg,var(--teal),var(--teal-deep));border-radius:20px;color:#fff;padding:38px 32px;margin-bottom:30px;position:relative;overflow:hidden;}
+.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%, rgba(200,114,11,.35), transparent 55%);}
+.hero *{position:relative;z-index:1;}
+.hero .eyebrow{color:var(--amber-pale);font-weight:700;font-size:.9rem;margin-bottom:6px;}
+.hero h1{color:#fff;font-size:1.85rem;margin-bottom:8px;}
+.hero p{color:#dff2ee;max-width:60ch;margin-bottom:0;}
+
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;}
+.game-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow);border-top:5px solid var(--teal);display:flex;flex-direction:column;transition:transform .15s;}
+.game-card:hover{transform:translateY(-3px);}
+.game-card .icon{font-size:2.2rem;margin-bottom:10px;}
+.game-card h3{font-size:1.08rem;margin-bottom:6px;}
+.game-card p{color:var(--ink-soft);font-size:.92rem;flex:1;}
+.game-card .btn{margin-top:12px;align-self:flex-start;}
+
+/* ألوان متبادلة لبطاقات الألعاب */
+.game-card.c2{border-top-color:var(--amber);}
+.game-card.c3{border-top-color:var(--rose);}
+.game-card.c4{border-top-color:var(--blue);}
+
+/* ============ عناصر مشتركة ============ */
+.btn{background:var(--teal);color:#fff;border:none;padding:11px 24px;border-radius:10px;font-weight:700;font-size:.98rem;box-shadow:0 6px 16px -6px rgba(15,118,110,.5);transition:transform .15s,background .15s;}
+.btn:hover{background:var(--teal-deep);transform:translateY(-1px);}
+.btn:disabled{background:#b7bdb9;box-shadow:none;cursor:not-allowed;transform:none;}
+.btn.amber{background:var(--amber);box-shadow:0 6px 16px -6px rgba(200,114,11,.5);}
+.btn.amber:hover{background:#a35c08;}
+.btn.outline{background:transparent;color:var(--teal);border:1.5px solid var(--teal);box-shadow:none;}
+.btn.outline:hover{background:var(--teal-pale);}
+.btn.sm{padding:6px 14px;font-size:.85rem;}
+.back-btn{background:none;border:none;color:var(--teal);font-weight:700;font-size:.95rem;margin-bottom:14px;padding:0;}
+.back-btn:hover{text-decoration:underline;}
+.game-desc{color:var(--ink-soft);margin-bottom:22px;max-width:70ch;}
+.card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);}
+.center{text-align:center;}
+.badge-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
+.stat-badge{background:var(--teal-pale);color:var(--teal-deep);border-radius:10px;padding:9px 18px;font-family:'Cairo',sans-serif;font-weight:800;font-size:.95rem;}
+.stat-badge.amber{background:var(--amber-pale);color:#7a4c08;}
+.stat-badge.bad{background:var(--bad-pale);color:var(--bad);}
+.hearts{font-size:1.1rem;letter-spacing:3px;}
+.finish-card{max-width:480px;margin:20px auto;text-align:center;}
+.finish-card .emoji{font-size:3rem;margin-bottom:10px;}
+
+/* ============ لعبة 1: برج القوى ============ */
+.tower-stage{display:grid;grid-template-columns:1fr 260px;gap:24px;align-items:start;}
+.tower-visual{background:linear-gradient(180deg,var(--teal-pale),#fff);border-radius:16px;border:1px solid var(--line);min-height:420px;display:flex;flex-direction:column-reverse;align-items:center;padding:14px;overflow:hidden;}
+.tower-ground{width:90%;height:14px;background:var(--teal-deep);border-radius:4px;margin-top:auto;}
+.floor{width:80%;max-width:220px;background:linear-gradient(135deg,var(--amber),#a35c08);color:#fff;font-family:'Cairo',sans-serif;font-weight:800;border-radius:8px;padding:10px;margin-top:4px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.15);animation:pop .35s ease;}
+@keyframes pop{from{transform:scale(.4) translateY(20px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-6px);}80%{transform:translateX(6px);}}
+.shake{animation:shake .4s;}
+.tower-q-panel .q-text{font-family:'Cairo',sans-serif;font-weight:800;font-size:1.15rem;text-align:center;margin-bottom:16px;color:var(--teal-deep);}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.opt-btn{background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:12px 8px;font-weight:700;font-size:.98rem;text-align:center;direction:ltr;}
+.opt-btn:hover{border-color:var(--teal);}
+.opt-btn.correct{background:var(--good-pale);border-color:var(--good);color:var(--good);}
+.opt-btn.wrong{background:var(--bad-pale);border-color:var(--bad);color:var(--bad);}
+
+/* ============ لعبة 2: الذاكرة ============ */
+.memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;perspective:800px;}
+.memory-card{aspect-ratio:1/0.85;position:relative;cursor:pointer;}
+.memory-inner{width:100%;height:100%;position:relative;transition:transform .5s;transform-style:preserve-3d;}
+.memory-card.flipped .memory-inner,.memory-card.matched .memory-inner{transform:rotateY(180deg);}
+.mem-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;font-weight:800;font-family:'Cairo',sans-serif;}
+.mem-front{background:linear-gradient(135deg,var(--teal),var(--teal-deep));color:#fff;font-size:1.6rem;}
+.mem-back{background:#fff;border:2px solid var(--teal-pale);transform:rotateY(180deg);font-size:1rem;color:var(--teal-deep);direction:ltr;}
+.memory-card.matched .mem-back{background:var(--good-pale);border-color:var(--good);color:var(--good);}
+@media (max-width:700px){.memory-grid{grid-template-columns:repeat(3,1fr);}}
+
+/* ============ لعبة 3: السباق الزمني ============ */
+.track-wrap{background:linear-gradient(180deg,var(--teal-pale),#fff);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:20px;}
+.track{position:relative;height:52px;background:#fff;border-radius:999px;border:2px dashed var(--teal);margin-bottom:6px;}
+.track .flag{position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:1.4rem;}
+.track .runner{position:absolute;right:6px;top:50%;transform:translate(0,-50%);font-size:1.6rem;transition:right 1s ease;}
+.speed-q{font-family:'Cairo',sans-serif;font-weight:800;font-size:1.2rem;text-align:center;margin:18px 0;}
+.tf-row{display:flex;gap:16px;justify-content:center;}
+.tf-big{padding:16px 40px;border-radius:14px;font-family:'Cairo',sans-serif;font-weight:800;font-size:1.1rem;border:none;}
+.tf-big.yes{background:var(--good);color:#fff;}
+.tf-big.no{background:var(--bad);color:#fff;}
+.mini-timer{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:10px;}
+.mini-timer-fill{height:100%;background:var(--amber);width:100%;transition:width .1s linear;}
+
+/* ============ لعبة 4: افتح الصندوق ============ */
+.box-stage{display:flex;flex-direction:column;align-items:center;gap:18px;}
+.box-visual{font-size:5rem;transition:transform .3s;}
+.box-visual.opened{transform:scale(1.15) rotate(-4deg);}
+.lock-steps{display:flex;gap:10px;margin:10px 0 20px;}
+.lock-dot{width:34px;height:34px;border-radius:8px;background:var(--line);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Cairo',sans-serif;font-weight:800;}
+.lock-dot.done{background:var(--good);}
+.lock-dot.current{background:var(--amber);}
+.box-q{max-width:460px;width:100%;text-align:center;}
+.box-input{width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:9px;font-size:1rem;text-align:center;margin:12px 0;}
+.box-input:focus{outline:none;border-color:var(--teal);}
+.box-feedback{min-height:24px;font-weight:700;}
+.box-feedback.ok{color:var(--good);}
+.box-feedback.bad{color:var(--bad);}
+
+/* ============ لعبة 5: غرفة الهروب ============ */
+.escape-timer{font-family:'Cairo',sans-serif;font-weight:900;font-size:1.6rem;text-align:center;background:var(--teal-deep);color:#fff;border-radius:12px;padding:10px;margin-bottom:16px;}
+.padlocks{display:flex;justify-content:center;gap:14px;margin-bottom:22px;flex-wrap:wrap;}
+.padlock{width:46px;height:46px;border-radius:10px;background:var(--paper-raised);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.padlock.open{background:var(--good-pale);border-color:var(--good);}
+.puzzle-nav{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap;}
+.puzzle-nav button{width:38px;height:38px;border-radius:8px;border:1px solid var(--line);background:#fff;font-weight:700;}
+.puzzle-nav button.solved{background:var(--good-pale);border-color:var(--good);color:var(--good);}
+.puzzle-nav button.active{outline:2px solid var(--amber);}
+
+/* ============ لعبة 6: عجلة الحظ ============ */
+.wheel-stage{display:grid;grid-template-columns:220px 1fr;gap:26px;align-items:start;}
+.reel-frame{position:relative;background:var(--teal-deep);border-radius:16px;padding:6px;overflow:hidden;height:180px;}
+.reel-frame:before,.reel-frame:after{content:"";position:absolute;left:0;right:0;height:60px;z-index:2;pointer-events:none;}
+.reel-frame:before{top:0;background:linear-gradient(180deg,rgba(11,79,74,.95),transparent);}
+.reel-frame:after{bottom:0;background:linear-gradient(0deg,rgba(11,79,74,.95),transparent);}
+.reel-strip{position:relative;top:0;transition:top 3s cubic-bezier(.15,.85,.3,1);}
+.reel-item{height:60px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Cairo',sans-serif;font-weight:800;text-align:center;padding:0 8px;font-size:.98rem;}
+.reel-pointer{position:absolute;top:50%;right:-4px;transform:translateY(-50%);width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-right:14px solid var(--amber);z-index:3;}
+.teams-row{display:flex;gap:16px;margin-top:16px;flex-wrap:wrap;}
+.team-box{flex:1;min-width:150px;background:var(--paper-raised);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;}
+.team-box h4{margin-bottom:6px;}
+.team-score{font-family:'Cairo',sans-serif;font-weight:900;font-size:2rem;color:var(--teal-deep);margin-bottom:8px;}
+.team-btns{display:flex;gap:6px;justify-content:center;}
+.wheel-reveal{background:var(--paper-raised);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:16px;display:none;}
+.wheel-reveal.show{display:block;}
+
+/* ============ لعبة 7: اصطد الإجابة ============ */
+.falling-target{text-align:center;font-family:'Cairo',sans-serif;font-weight:800;font-size:1.2rem;background:var(--teal-pale);border-radius:10px;padding:10px;margin-bottom:12px;color:var(--teal-deep);}
+.falling-area{position:relative;height:420px;background:linear-gradient(180deg,#eaf5f2,#fff);border:2px solid var(--teal);border-radius:16px;overflow:hidden;}
+.bubble{position:absolute;background:linear-gradient(135deg,var(--amber),#a35c08);color:#fff;border:none;border-radius:50%;width:84px;height:84px;font-weight:800;font-family:'Cairo',sans-serif;font-size:.92rem;box-shadow:0 4px 10px rgba(0,0,0,.2);direction:ltr;}
+.bubble:hover{filter:brightness(1.08);}
+
+/* ============ لعبة 8: بناء المعادلة ============ */
+.builder-template{font-family:'Cairo',sans-serif;font-weight:800;font-size:1.5rem;text-align:center;direction:ltr;margin:20px 0;}
+.blank-slot{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:44px;border:2px dashed var(--teal);border-radius:8px;background:var(--teal-pale);margin:0 4px;font-size:1.1rem;color:var(--teal-deep);vertical-align:middle;}
+.blank-slot.filled{border-style:solid;background:var(--amber-pale);color:#7a4c08;}
+.tile-pool{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0;}
+.tile{width:52px;height:52px;border-radius:10px;background:var(--paper-raised);border:1.5px solid var(--line);font-family:'Cairo',sans-serif;font-weight:800;font-size:1.05rem;}
+.tile:hover{border-color:var(--teal);}
+.tile.used{opacity:.25;pointer-events:none;}
+.round-dots{display:flex;gap:6px;justify-content:center;margin-bottom:8px;}
+.round-dots span{width:9px;height:9px;border-radius:50%;background:var(--line);}
+.round-dots span.done{background:var(--good);}
+.round-dots span.current{background:var(--amber);}
+
+footer{text-align:center;color:var(--ink-soft);font-size:.85rem;padding:20px;}
+@media (max-width:820px){
+  .tower-stage,.wheel-stage{grid-template-columns:1fr;}
+  .opt-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="brand"><span class="mark">🎮</span> مركز الألعاب التعليمية — قوى الأسس</div>
+    <button class="home-btn" id="btn-home">🏠 القائمة الرئيسية</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ صفحة القائمة الرئيسية ============ -->
+<section id="view-hub" class="view active">
+  <div class="hero">
+    <div class="eyebrow">الوحدة الأولى — قوى الأسس والمعادلات الأسية</div>
+    <h1>8 ألعاب تفاعلية لمراجعة الدرس بطريقة ممتعة</h1>
+    <p>اختر لعبة من القائمة أدناه للتدرب على قوانين الأسس، وقوة القوة، والمعادلات الأسية بأساليب مختلفة تناسب الفصل أو المذاكرة الفردية.</p>
+  </div>
+  <div class="games-grid">
+    <div class="game-card">
+      <div class="icon">🏗️</div><h3>برج القوى</h3>
+      <p>أجب بشكل صحيح لتبني طابقًا جديدًا في البرج. ثلاث إجابات خاطئة تهزّ البرج!</p>
+      <button class="btn" data-open="tower">ابدأ اللعب</button>
+    </div>
+    <div class="game-card c2">
+      <div class="icon">🧠</div><h3>لعبة الذاكرة</h3>
+      <p>اقلب البطاقات وطابق كل تعبير أسي بصورته المبسطة في أقل عدد محاولات.</p>
+      <button class="btn amber" data-open="memory">ابدأ اللعب</button>
+    </div>
+    <div class="game-card c3">
+      <div class="icon">🐇</div><h3>السباق الزمني</h3>
+      <p>حدد صح أو خطأ بسرعة قبل نفاذ الوقت لتقدّم الأرنب نحو خط النهاية.</p>
+      <button class="btn" style="background:var(--rose);" data-open="speedrun">ابدأ اللعب</button>
+    </div>
+    <div class="game-card c4">
+      <div class="icon">📦</div><h3>افتح الصندوق</h3>
+      <p>حل خطوات معادلة الصندوق الكرتوني واحدة تلو الأخرى لتفتح القفل.</p>
+      <button class="btn" style="background:var(--blue);" data-open="box">ابدأ اللعب</button>
+    </div>
+    <div class="game-card">
+      <div class="icon">🔐</div><h3>غرفة الهروب</h3>
+      <p>حل 5 ألغاز قبل نفاذ الوقت لتفتح جميع الأقفال وتهرب من الغرفة.</p>
+      <button class="btn" data-open="escape">ابدأ اللعب</button>
+    </div>
+    <div class="game-card c2">
+      <div class="icon">🎡</div><h3>عجلة الحظ (فرق)</h3>
+      <p>لعبة جماعية: أدر العجلة، أجب حسب نوع السؤال، واجمع نقاط فريقك.</p>
+      <button class="btn amber" data-open="wheel">ابدأ اللعب</button>
+    </div>
+    <div class="game-card c3">
+      <div class="icon">🫧</div><h3>اصطد الإجابة</h3>
+      <p>فقاعات الإجابات تتساقط من الأعلى — اضغط على الإجابة الصحيحة بسرعة قبل سقوطها.</p>
+      <button class="btn" style="background:var(--rose);" data-open="falling">ابدأ اللعب</button>
+    </div>
+    <div class="game-card c4">
+      <div class="icon">🧩</div><h3>بناء المعادلة</h3>
+      <p>اسحب/اختر البلاطات الرقمية الصحيحة لتكوين معادلة أسية تحقق الناتج المطلوب.</p>
+      <button class="btn" style="background:var(--blue);" data-open="builder">ابدأ اللعب</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1: برج القوى ============ -->
+<section id="view-tower" class="view">
+  <button class="back-btn" data-back>⬅ رجوع للقائمة</button>
+  <h1>🏗️ برج القوى</h1>
+  <p class="game-desc">أجب عن كل سؤال بشكل صحيح لإضافة طابق جديد للبرج. عندك 3 قلوب فقط — كل إجابة خاطئة تهزّ البرج وتفقدك قلبًا!</p>
+  <div class="badge-row">
+    <div class="stat-badge">🏢 الطوابق: <span id="tower-floors">0</span></div>
+    <div class="stat-badge bad">❤️ القلوب: <span id="tower-hearts">3</span></div>
+  </div>
+  <div id="tower-stage" class="tower-stage">
+    <div class="tower-visual" id="tower-visual"><div class="tower-ground"></div></div>
+    <div class="card tower-q-panel">
+      <div class="q-text" id="tower-q-text">...</div>
+      <div class="opt-grid" id="tower-opts"></div>
+    </div>
+  </div>
+  <div id="tower-finish" style="display:none;" class="finish-card card">
+    <div class="emoji">🏆</div>
+    <h2 id="tower-finish-title">تم!</h2>
+    <p id="tower-finish-text"></p>
+    <button class="btn" data-restart="tower">إعادة اللعب</button>
+  </div>
+</section>
+
+<!-- ============ 2: الذاكرة ============ -->
+<section id="view-memory" class="view">
+  <button class="back-btn" data-back>⬅ رجوع للقائمة</button>
+  <h1>🧠 لعبة الذاكرة</h1>
+  <p class="game-desc">اقلب بطاقتين في كل مرة، وحاول تطابق التعبير الأسي غير المبسط مع صورته المبسطة الصحيحة.</p>
+  <div class="badge-row">
+    <div class="stat-badge">🔄 المحاولات: <span id="mem-tries">0</span></div>
+    <div class="stat-badge">✅ الأزواج: <span id="mem-matches">0</span> / 8</div>
+  </div>
+  <div class="memory-grid" id="memory-grid"></div>
+  <div id="memory-finish" style="display:none;" class="finish-card card">
+    <div class="emoji">🎉</div>
+    <h2>أحسنت! أنهيت اللعبة</h2>
+    <p id="memory-finish-text"></p>
+    <button class="btn" data-restart="memory">إعادة اللعب</button>
+  </div>
+</section>
+
+<!-- ============ 3: السباق الزمني ============ -->
+<section id="view-speedrun" class="view">
+  <button class="back-btn" data-back>⬅ رجوع للقائمة</button>
+  <h1>🐇 السباق الزمني</h1>
+  <p class="game-desc">حدد هل العبارة صح أم خطأ بأسرع ما يمكن. كل إجابة صحيحة تقدّم الأرنب خطوة نحو الجزرة!</p>
+  <div class="badge-row">
+    <div class="stat-badge">❤️ القلوب: <span id="speed-hearts">3</span></div>
+    <div class="stat-badge amber">🏁 التقدم: <span id="speed-progress">0</span> / 10</div>
+  </div>
+  <div class="track-wrap">
+    <div class="track"><div class="flag">🥕</div><div class="runner" id="speed-runner" style="right:6px;">🐇</div></div>
+  </div>
+  <div class="card">
+    <div class="mini-timer"><div class="mini-timer-fill" id="speed-timer-fill"></div></div>
+    <div class="speed-q" id="speed-q-text">...</div>
+    <div class="tf-row">
+      <button class="tf-big yes" id="speed-yes">✔️ صح</button>
+      <button class="tf-big no" id="speed-no">✖️ خطأ</button>
+    </div>
+  </div>
+  <div id="speed-finish" style="display:none;" class="finish-card card">
+    <div class="emoji" id="speed-finish-emoji">🥕</div>
+    <h2 id="speed-finish-title"></h2>
+    <p id="speed-finish-text"></p>
+    <button class="btn" data-restart="speedrun">إعادة اللعب</button>
+  </div>
+</section>
+
+<!-- ============ 4: افتح الصندوق ============ -->
+<section id="view-box" class="view">
+  <button class="back-btn" data-back>⬅ رجوع للقائمة</button>
+  <h1>📦 افتح الصندوق</h1>
+  <p class="game-desc">صندوق كرتوني حجمه 1 متر مكعب، وأبعاده h=2ˣ ، w=2ˣ⁺¹ ، l=2ˣ⁺². حل الخطوات الأربع بالترتيب لتفتح الصندوق وتكتشف أبعاده الحقيقية.</p>
+  <div class="box-stage">
+    <div class="box-visual" id="box-visual">📦</div>
+    <div class="lock-steps" id="box-steps"></div>
+    <div class="card box-q">
+      <div id="box-q-text" style="font-weight:800;font-family:'Cairo',sans-serif;font-size:1.05rem;"></div>
+      <input type="text" id="box-input" class="box-input" placeholder="اكتب إجابتك هنا">
+      <button class="btn" id="box-check">تحقق</button>
+      <div class="box-feedback" id="box-feedback"></div>
+    </div>
+  </div>
+  <div id="box-finish" style="display:none;" class="finish-card card">
+    <div class="emoji">🎁</div>
+    <h2>تم فتح الصندوق!</h2>
+    <p id="box-finish-text"></p>
+    <button class="btn" data-restart="box">إعادة اللعب</button>
+  </div>
+</section>
+
+<!-- ============ 5: غرفة الهروب ============ -->
+<section id="view-escape" class="view">
+  <button class="back-btn" data-back>⬅ رجوع للقائمة</button>
+  <h1>🔐 غرفة الهروب</h1>
+  <p class="game-desc">أنت داخل متحف الأحياء المائية بالإسكندرية والباب مغلق! حل الألغاز الخمسة قبل نفاذ الوقت لفتح جميع الأقفال والهروب.</p>
+  <div class="escape-timer" id="escape-timer">05:00</div>
+  <div class="padlocks" id="escape-locks"></div>
+  <div class="card" id="escape-puzzle-card"></div>
+  <div class="puzzle-nav" id="escape-nav"></div>
+  <div id="escape-finish" style="display:none;" class="finish-card card">
+    <div class="emoji" id="escape-finish-emoji">🎉</div>
+    <h2 id="escape-finish-title"></h2>
+    <p id="escape-finish-text"></p>
+    <button class="btn" data-restart="escape">إعادة اللعب</button>
+  </div>
+</section>
+
+<!-- ============ 6: عجلة الحظ ============ -->
+<section id="view-wheel" class="view">
+  <button class="back-btn" data-back>⬅ رجوع للقائمة</button>
+  <h1>🎡 عجلة الحظ — تحدي الفريقين</h1>
+  <p class="game-desc">قسّم الفصل إلى فريقين. كل فريق يدير العجلة بالترتيب، يجاوب حسب نوع السؤال الذي تظهره، والمعلم يمنح النقاط للفريق الفائز بالإجابة.</p>
+  <div class="wheel-stage">
+    <div>
+      <div class="reel-frame">
+        <div class="reel-strip" id="reel-strip"></div>
+        <div class="reel-pointer"></div>
+      </div>
+      <button class="btn amber" id="btn-spin" style="width:100%;margin-top:14px;">🎯 أدر العجلة</button>
+    </div>
+    <div>
+      <div class="wheel-reveal" id="wheel-reveal">
+        <h3 id="wheel-cat-title"></h3>
+        <div id="wheel-q-body"></div>
+        <button class="btn sm outline" id="wheel-reveal-btn" style="margin-top:10px;">إظهار الإجابة</button>
+        <div id="wheel-answer" style="display:none;margin-top:10px;padding:10px;background:var(--good-pale);border-radius:8px;color:#0d4a2a;"></div>
+      </div>
+      <div class="teams-row">
+        <div class="team-box">
+          <h4>🔵 الفريق الأول</h4>
+          <div class="team-score" id="teamA-score">0</div>
+          <div class="team-btns">
+            <button class="btn sm" data-team="A" data-pts="1">+1</button>
+            <button class="btn sm amber" data-team="A" data-pts="2">+2</button>
+            <button class="btn sm outline" data-team="A" data-pts="-1">-1</button>
+          </div>
+        </div>
+        <div class="team-box">
+          <h4>🟠 الفريق الثاني</h4>
+          <div class="team-score" id="teamB-score">0</div>
+          <div class="team-btns">
+            <button class="btn sm" data-team="B" data-pts="1">+1</button>
+            <button class="btn sm amber" data-team="B" data-pts="2">+2</button>
+            <button class="btn sm outline" data-team="B" data-pts="-1">-1</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7: اصطد الإجابة ============ -->
+<section id="view-falling" class="view">
+  <button class="back-btn" data-back>⬅ رجوع للقائمة</button>
+  <h1>🫧 اصطد الإجابة</h1>
+  <p class="game-desc">اضغط على الفقاعة التي تحمل الإجابة الصحيحة قبل أن تسقط لأسفل الشاشة! عندك 3 قلوب فقط.</p>
+  <div class="badge-row">
+    <div class="stat-badge">⭐ النقاط: <span id="fall-score">0</span></div>
+    <div class="stat-badge bad">❤️ القلوب: <span id="fall-hearts">3</span></div>
+  </div>
+  <div class="falling-target" id="fall-target">...</div>
+  <div class="falling-area" id="falling-area"></div>
+  <div id="fall-finish" style="display:none;" class="finish-card card">
+    <div class="emoji">🎯</div>
+    <h2>انتهت اللعبة!</h2>
+    <p id="fall-finish-text"></p>
+    <button class="btn" data-restart="falling">إعادة اللعب</button>
+  </div>
+</section>
+
+<!-- ============ 8: بناء المعادلة ============ -->
+<section id="view-builder" class="view">
+  <button class="back-btn" data-back>⬅ رجوع للقائمة</button>
+  <h1>🧩 بناء المعادلة</h1>
+  <p class="game-desc">اختر البلاطات الرقمية الصحيحة من المجموعة واضغط عليها لوضعها في الفراغات بحيث تتحقق المعادلة المطلوبة.</p>
+  <div class="round-dots" id="builder-dots"></div>
+  <div class="card center">
+    <div class="builder-template" id="builder-template"></div>
+    <div class="tile-pool" id="builder-pool"></div>
+    <button class="btn" id="builder-check">تحقق من الإجابة</button>
+    <div class="box-feedback" id="builder-feedback" style="margin-top:10px;"></div>
+  </div>
+  <div id="builder-finish" style="display:none;" class="finish-card card">
+    <div class="emoji">🧩</div>
+    <h2>أحسنت! أكملت جميع الجولات</h2>
+    <button class="btn" data-restart="builder">إعادة اللعب</button>
+  </div>
+</section>
+
+</div>
+<footer>مركز الألعاب التعليمية — الوحدة الأولى: قوى الأسس والمعادلات الأسية · للاستخدام التعليمي</footer>
+
+<script>
+/* ================================================================
+   أدوات عامة
+   ================================================================ */
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function pickRandom(arr,n){ return shuffle(arr).slice(0,n); }
+
+/* ================================================================
+   بنك الأسئلة المشترك بين الألعاب
+   ================================================================ */
+// أسئلة اختيار من متعدد عامة (تُستخدم في: برج القوى، اصطد الإجابة، عجلة الحظ، غرفة الهروب)
+const GENERAL_BANK=[
+  {q:"بسّط: 2³ × 2⁴", options:["2⁷","2¹²","2¹","4⁷"], correct:0},
+  {q:"بسّط: (2³)²", options:["2⁶","2⁵","2⁹","4⁶"], correct:0},
+  {q:"بسّط: x⁸ ÷ x³", options:["x⁵","x¹¹","x²⁴","x⁸ᐟ³"], correct:0},
+  {q:"بسّط: (a×b)³", options:["a³b³","a³+b³","ab³","a³b"], correct:0},
+  {q:"بسّط: (2/3)²", options:["4/9","2/9","4/3","2/6"], correct:0},
+  {q:"قيمة: 5⁰", options:["1","0","5","غير معرّف"], correct:0},
+  {q:"قيمة: 2⁻²", options:["1/4","-4","-2","4"], correct:0},
+  {q:"بسّط: (x⁴y³)²", options:["x⁸y⁶","x⁶y⁸","x⁸y⁵","x⁴y³"], correct:0},
+  {q:"إذا كان 3ˣ = 3⁴ فإن x =", options:["4","3","7","12"], correct:0},
+  {q:"إذا كان 5ˣ = 125 فإن x =", options:["3","5","2","25"], correct:0},
+  {q:"بسّط: (−2)⁴", options:["16","-16","8","-8"], correct:0},
+  {q:"بسّط: (−2)³", options:["-8","8","-6","6"], correct:0},
+  {q:"بسّط: (a²)⁴ × a⁵", options:["a¹³","a¹¹","a⁴⁰","a³⁰"], correct:0},
+  {q:"إذا كان 9ˣ = 27 فإن x =", options:["3/2","2/3","3","2"], correct:0},
+  {q:"بسّط: 2¹¹² ÷ 2¹⁰⁹", options:["2³","2¹","2¹⁹","2²"], correct:0}
+];
+
+// أزواج المطابقة (لعبة الذاكرة)
+const MEMORY_PAIRS=[
+  {expr:"(x⁴y³)²", simple:"x⁸y⁶"},
+  {expr:"2³ × 2⁴", simple:"2⁷"},
+  {expr:"(2³)²", simple:"2⁶"},
+  {expr:"x⁸ ÷ x³", simple:"x⁵"},
+  {expr:"(a×b)³", simple:"a³b³"},
+  {expr:"(2/3)²", simple:"4/9"},
+  {expr:"a⁻²", simple:"1/a²"},
+  {expr:"(a²)⁴ × a⁵", simple:"a¹³"}
+];
+
+// عبارات صح/خطأ (السباق الزمني وغرفة الهروب وعجلة الحظ)
+const TF_BANK=[
+  {text:"(x³)² = x⁶", correct:true},
+  {text:"(9²)² = 3⁸", correct:true},
+  {text:"(2²)³ = 2⁸", correct:false},
+  {text:"a⁰ = 1 لأي عدد حقيقي a لا يساوي صفرًا", correct:true},
+  {text:"(a+b)ⁿ = aⁿ + bⁿ دائمًا", correct:false},
+  {text:"(−2)⁴ = 2⁴", correct:true},
+  {text:"(−3)³ = -9", correct:false},
+  {text:"إذا كان aˣ=aʸ حيث a≠1,a>0 فإن x=y", correct:true},
+  {text:"2³ × 2² = 2⁵", correct:true},
+  {text:"5⁻¹ = -5", correct:false},
+  {text:"(2×3)² = 2² × 3²", correct:true},
+  {text:"x⁵ ÷ x⁵ = 0", correct:false}
+];
+
+// أسئلة أكمل الفراغ (غرفة الهروب وعجلة الحظ)
+const BLANK_BANK=[
+  {q:"إذا كان 7ˣ⁺¹ = 5ˣ⁺¹ فإن X = ____", a:"-1"},
+  {q:"إذا كان 5ˣ⁻³ = 1 فإن X = ____", a:"3"},
+  {q:"(aᵐ)ⁿ = a^ ____", a:"m×n"},
+  {q:"(a×b)ᵐ = aᵐ × ____", a:"bᵐ"},
+  {q:"إذا كان 3ˣ = 3⁵ فإن X = ____", a:"5"}
+];
+
+let activeCleanup=null; // دالة تنظيف اللعبة النشطة عند مغادرتها (لإيقاف المؤقتات)
+
+/* ================================================================
+   التنقل بين الصفحات
+   ================================================================ */
+function showView(id){
+  if(typeof activeCleanup==="function"){ activeCleanup(); activeCleanup=null; }
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById("view-"+id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.getElementById("btn-home").addEventListener("click",()=>showView("hub"));
+document.querySelectorAll("[data-back]").forEach(b=>b.addEventListener("click",()=>showView("hub")));
+document.querySelectorAll("[data-open]").forEach(b=>{
+  b.addEventListener("click",()=>{
+    const id=b.dataset.open;
+    showView(id);
+    GAMES[id].init();
+  });
+});
+document.querySelectorAll("[data-restart]").forEach(b=>{
+  b.addEventListener("click",()=>{ GAMES[b.dataset.restart].init(); });
+});
+
+/* ================================================================
+   لعبة 1: برج القوى
+   ================================================================ */
+const TowerGame=(function(){
+  let queue=[], idx=0, hearts=3, floors=0;
+  function init(){
+    queue=pickRandom(GENERAL_BANK,8); idx=0; hearts=3; floors=0;
+    document.getElementById("tower-visual").innerHTML='<div class="tower-ground"></div>';
+    document.getElementById("tower-hearts").textContent=hearts;
+    document.getElementById("tower-floors").textContent=floors;
+    document.getElementById("tower-finish").style.display="none";
+    document.getElementById("tower-stage").style.display="grid";
+    renderQ();
+  }
+  function renderQ(){
+    if(idx>=queue.length){ finish(true); return; }
+    const q=queue[idx];
+    document.getElementById("tower-q-text").textContent=q.q;
+    const opts=q.options.map((op,i)=>({op,i})); // نحافظ على ترتيب الخيارات كما هي مع تحديد index الصحيح=0
+    const shuffled=shuffle(opts);
+    const box=document.getElementById("tower-opts");
+    box.innerHTML="";
+    shuffled.forEach(o=>{
+      const btn=document.createElement("button");
+      btn.className="opt-btn"; btn.textContent=o.op;
+      btn.addEventListener("click",()=>answer(o.i===0,btn));
+      box.appendChild(btn);
+    });
+  }
+  function answer(isCorrect,btn){
+    document.querySelectorAll("#tower-opts .opt-btn").forEach(b=>b.disabled=true);
+    if(isCorrect){
+      btn.classList.add("correct");
+      floors++;
+      document.getElementById("tower-floors").textContent=floors;
+      const floor=document.createElement("div");
+      floor.className="floor";
+      floor.textContent=queue[idx].options[0];
+      document.getElementById("tower-visual").appendChild(floor);
+    }else{
+      btn.classList.add("wrong");
+      hearts--;
+      document.getElementById("tower-hearts").textContent=hearts;
+      document.getElementById("tower-visual").classList.add("shake");
+      setTimeout(()=>document.getElementById("tower-visual").classList.remove("shake"),400);
+    }
+    setTimeout(()=>{
+      if(hearts<=0){ finish(false); return; }
+      idx++; renderQ();
+    },900);
+  }
+  function finish(won){
+    document.getElementById("tower-stage").style.display="none";
+    document.getElementById("tower-finish").style.display="block";
+    document.getElementById("tower-finish-title").textContent = won ? "🏆 بنيت البرج كاملًا!" : "💥 انهار البرج!";
+    document.getElementById("tower-finish-text").textContent = `عدد الطوابق التي بنيتها: ${floors} من ${queue.length}.`;
+  }
+  return {init};
+})();
+
+/* ================================================================
+   لعبة 2: الذاكرة
+   ================================================================ */
+const MemoryGame=(function(){
+  let tries=0, matches=0, first=null, lock=false;
+  function init(){
+    tries=0; matches=0; first=null; lock=false;
+    document.getElementById("mem-tries").textContent=0;
+    document.getElementById("mem-matches").textContent=0;
+    document.getElementById("memory-finish").style.display="none";
+    document.getElementById("memory-grid").style.display="grid";
+
+    let cards=[];
+    MEMORY_PAIRS.forEach((p,i)=>{
+      cards.push({pairId:i,text:p.expr});
+      cards.push({pairId:i,text:p.simple});
+    });
+    cards=shuffle(cards);
+    const grid=document.getElementById("memory-grid");
+    grid.innerHTML="";
+    cards.forEach(c=>{
+      const el=document.createElement("div");
+      el.className="memory-card";
+      el.dataset.pair=c.pairId;
+      el.innerHTML=`<div class="memory-inner">
+        <div class="mem-face mem-front">؟</div>
+        <div class="mem-face mem-back">${c.text}</div>
+      </div>`;
+      el.addEventListener("click",()=>flip(el));
+      grid.appendChild(el);
+    });
+  }
+  function flip(el){
+    if(lock || el.classList.contains("flipped") || el.classList.contains("matched")) return;
+    el.classList.add("flipped");
+    if(!first){ first=el; return; }
+    tries++; document.getElementById("mem-tries").textContent=tries;
+    lock=true;
+    const second=el;
+    if(first.dataset.pair===second.dataset.pair){
+      first.classList.add("matched"); second.classList.add("matched");
+      matches++; document.getElementById("mem-matches").textContent=matches;
+      first=null; lock=false;
+      if(matches===MEMORY_PAIRS.length) finish();
+    }else{
+      setTimeout(()=>{
+        first.classList.remove("flipped"); second.classList.remove("flipped");
+        first=null; lock=false;
+      },900);
+    }
+  }
+  function finish(){
+    document.getElementById("memory-grid").style.display="none";
+    document.getElementById("memory-finish").style.display="block";
+    document.getElementById("memory-finish-text").textContent=`أنهيت جميع الأزواج الثمانية في ${tries} محاولة.`;
+  }
+  return {init};
+})();
+
+/* ================================================================
+   لعبة 3: السباق الزمني
+   ================================================================ */
+const SpeedGame=(function(){
+  const TOTAL=10, TIME_PER_Q=6000;
+  let queue=[], idx=0, hearts=3, progress=0, timerInt=null, remain=0;
+  function init(){
+    queue=pickRandom(TF_BANK,TOTAL); idx=0; hearts=3; progress=0;
+    document.getElementById("speed-hearts").textContent=hearts;
+    document.getElementById("speed-progress").textContent=progress;
+    document.getElementById("speed-runner").style.right="6px";
+    document.getElementById("speed-finish").style.display="none";
+    document.querySelector(".track-wrap").style.display="block";
+    document.querySelector("#view-speedrun .card").style.display="block";
+    document.getElementById("speed-yes").disabled=false;
+    document.getElementById("speed-no").disabled=false;
+    renderQ();
+  }
+  function renderQ(){
+    if(idx>=queue.length){ finish(true); return; }
+    document.getElementById("speed-q-text").textContent=queue[idx].text;
+    startTimer();
+  }
+  function startTimer(){
+    remain=TIME_PER_Q;
+    document.getElementById("speed-timer-fill").style.width="100%";
+    clearInterval(timerInt);
+    timerInt=setInterval(()=>{
+      remain-=100;
+      document.getElementById("speed-timer-fill").style.width=Math.max(0,remain/TIME_PER_Q*100)+"%";
+      if(remain<=0){ clearInterval(timerInt); answer(false); }
+    },100);
+  }
+  function answer(given){
+    clearInterval(timerInt);
+    const ok = given===queue[idx].correct;
+    if(ok){
+      progress++;
+      document.getElementById("speed-progress").textContent=progress;
+      const pct=(progress/TOTAL)*90+6;
+      document.getElementById("speed-runner").style.right=pct+"%";
+    }else{
+      hearts--;
+      document.getElementById("speed-hearts").textContent=hearts;
+    }
+    if(hearts<=0){ finish(false); return; }
+    idx++;
+    renderQ();
+  }
+  document.getElementById("speed-yes").addEventListener("click",()=>answer(true));
+  document.getElementById("speed-no").addEventListener("click",()=>answer(false));
+  function finish(won){
+    clearInterval(timerInt);
+    document.querySelector(".track-wrap").style.display="none";
+    document.querySelector("#view-speedrun .card").style.display="none";
+    document.getElementById("speed-finish").style.display="block";
+    document.getElementById("speed-finish-emoji").textContent = won ? "🥕" : "💔";
+    document.getElementById("speed-finish-title").textContent = won ? "وصل الأرنب للجزرة!" : "انتهت المحاولات";
+    document.getElementById("speed-finish-text").textContent = `أجبت بشكل صحيح على ${progress} من ${TOTAL} عبارات.`;
+  }
+  function cleanup(){ clearInterval(timerInt); }
+  return {init, cleanup};
+})();
+
+/* ================================================================
+   لعبة 4: افتح الصندوق
+   ================================================================ */
+const BoxGame=(function(){
+  const STEPS=[
+    {q:"اجمع الأسس الثلاثة لأبعاد الصندوق: x + (x+1) + (x+2) = ____", check:v=>norm(v)==="3x+3", hint:"اجمع الحدود المتشابهة"},
+    {q:"بما أن حجم الصندوق = 1 = 2⁰، إذن الأس الناتج 3x+3 يساوي: ____", check:v=>norm(v)==="0", hint:"1 = 2 أس كام؟"},
+    {q:"من المعادلة 3x + 3 = 0 ، فإن قيمة x = ____", check:v=>norm(v)==="-1", hint:"اطرح 3 ثم اقسم على 3"},
+    {q:"إذن ارتفاع الصندوق h = 2ˣ = 2⁻¹ = ____ (اكتب الإجابة على صورة كسر مثل 1/2)", check:v=>norm(v)==="1/2", hint:"تذكر أن a⁻ⁿ = 1/aⁿ"}
+  ];
+  let step=0;
+  function norm(v){ return v.replace(/\s+/g,"").replace("−","-"); }
+  function init(){
+    step=0;
+    document.getElementById("box-visual").classList.remove("opened");
+    document.getElementById("box-visual").textContent="📦";
+    document.getElementById("box-finish").style.display="none";
+    document.querySelector(".box-stage").style.display="flex";
+    renderSteps();
+    renderQ();
+  }
+  function renderSteps(){
+    const box=document.getElementById("box-steps");
+    box.innerHTML="";
+    STEPS.forEach((s,i)=>{
+      const d=document.createElement("div");
+      d.className="lock-dot"+(i<step?" done":(i===step?" current":""));
+      d.textContent=i+1;
+      box.appendChild(d);
+    });
+  }
+  function renderQ(){
+    if(step>=STEPS.length){ finish(); return; }
+    document.getElementById("box-q-text").textContent=STEPS[step].q;
+    document.getElementById("box-input").value="";
+    document.getElementById("box-feedback").textContent="";
+    document.getElementById("box-feedback").className="box-feedback";
+  }
+  document.getElementById("box-check").addEventListener("click",()=>{
+    if(step>=STEPS.length) return;
+    const v=document.getElementById("box-input").value.trim();
+    if(!v) return;
+    const fb=document.getElementById("box-feedback");
+    if(STEPS[step].check(v)){
+      fb.textContent="✔️ صحيح! ننتقل للخطوة التالية.";
+      fb.className="box-feedback ok";
+      step++;
+      renderSteps();
+      setTimeout(renderQ,700);
+    }else{
+      fb.textContent="✖️ غير صحيح، حاول مرة أخرى. تلميح: "+STEPS[step].hint;
+      fb.className="box-feedback bad";
+    }
+  });
+  function finish(){
+    document.querySelector(".box-stage").style.display="none";
+    document.getElementById("box-finish").style.display="block";
+    document.getElementById("box-finish-text").textContent="أبعاد الصندوق: الارتفاع 1/2 متر، والعرض 1 متر، والطول 2 متر.";
+    const bv=document.getElementById("box-visual");
+    bv.classList.add("opened"); bv.textContent="🎁";
+  }
+  return {init};
+})();
+
+/* ================================================================
+   لعبة 5: غرفة الهروب
+   ================================================================ */
+const EscapeGame=(function(){
+  let puzzles=[], solved=[], current=0, timerInt=null, remainSec=300;
+  function buildPuzzles(){
+    const mcq=pickRandom(GENERAL_BANK,2).map(q=>({type:"mcq",q:q.q,options:q.options,correct:0}));
+    const tf=pickRandom(TF_BANK,2).map(q=>({type:"tf",q:q.text,correct:q.correct}));
+    const blank=pickRandom(BLANK_BANK,1).map(q=>({type:"blank",q:q.q,answer:q.a}));
+    return shuffle([...mcq,...tf,...blank]);
+  }
+  function init(){
+    puzzles=buildPuzzles();
+    solved=new Array(puzzles.length).fill(false);
+    current=0; remainSec=300;
+    document.getElementById("escape-finish").style.display="none";
+    document.getElementById("escape-puzzle-card").style.display="block";
+    document.getElementById("escape-timer").textContent="05:00";
+    renderLocks(); renderNav(); renderPuzzle();
+    clearInterval(timerInt);
+    timerInt=setInterval(()=>{
+      remainSec--;
+      const m=String(Math.floor(remainSec/60)).padStart(2,"0");
+      const s=String(remainSec%60).padStart(2,"0");
+      document.getElementById("escape-timer").textContent=`${m}:${s}`;
+      if(remainSec<=0){ clearInterval(timerInt); finish(false); }
+    },1000);
+  }
+  function renderLocks(){
+    const box=document.getElementById("escape-locks");
+    box.innerHTML="";
+    puzzles.forEach((p,i)=>{
+      const d=document.createElement("div");
+      d.className="padlock"+(solved[i]?" open":"");
+      d.textContent=solved[i]?"🔓":"🔒";
+      box.appendChild(d);
+    });
+  }
+  function renderNav(){
+    const box=document.getElementById("escape-nav");
+    box.innerHTML="";
+    puzzles.forEach((p,i)=>{
+      const b=document.createElement("button");
+      b.textContent=i+1;
+      if(solved[i]) b.classList.add("solved");
+      if(i===current) b.classList.add("active");
+      b.addEventListener("click",()=>{ current=i; renderPuzzle(); renderNav(); });
+      box.appendChild(b);
+    });
+  }
+  function renderPuzzle(){
+    const p=puzzles[current];
+    const card=document.getElementById("escape-puzzle-card");
+    if(solved[current]){
+      card.innerHTML=`<p style="color:var(--good);font-weight:700;">✔️ تم حل هذا اللغز بنجاح! اختر لغزًا آخر من الأسفل.</p>`;
+      return;
+    }
+    if(p.type==="mcq"){
+      card.innerHTML=`<h3>${p.q}</h3><div class="mcq-options-wrap" id="ep-opts"></div>`;
+      const box=document.getElementById("ep-opts");
+      const opts=shuffle(p.options.map((op,i)=>({op,i})));
+      opts.forEach(o=>{
+        const b=document.createElement("button");
+        b.className="opt-btn"; b.style.display="block"; b.style.width="100%"; b.style.marginBottom="8px";
+        b.textContent=o.op;
+        b.addEventListener("click",()=>checkPuzzle(o.i===0,b));
+        box.appendChild(b);
+      });
+    }else if(p.type==="tf"){
+      card.innerHTML=`<h3>${p.q}</h3>
+        <div class="tf-row" style="justify-content:flex-start;gap:10px;">
+          <button class="btn sm" id="ep-yes">✔️ صح</button>
+          <button class="btn sm outline" id="ep-no">✖️ خطأ</button>
+        </div>`;
+      document.getElementById("ep-yes").addEventListener("click",()=>checkPuzzle(p.correct===true));
+      document.getElementById("ep-no").addEventListener("click",()=>checkPuzzle(p.correct===false));
+    }else{
+      card.innerHTML=`<h3>${p.q}</h3>
+        <input type="text" id="ep-input" class="box-input" placeholder="اكتب الإجابة">
+        <button class="btn sm">تحقق</button>`;
+      card.querySelector("button.btn").addEventListener("click",()=>{
+        const v=card.querySelector("#ep-input").value.trim().replace(/\s+/g,"").replace("−","-");
+        checkPuzzle(v===p.answer.replace(/\s+/g,""));
+      });
+    }
+  }
+  function checkPuzzle(ok,btn){
+    if(ok){
+      solved[current]=true;
+      renderLocks(); renderNav(); renderPuzzle();
+      if(solved.every(s=>s)) finish(true);
+    }else{
+      if(btn){ btn.classList.add("wrong"); setTimeout(()=>btn.classList.remove("wrong"),500); }
+      else{
+        const card=document.getElementById("escape-puzzle-card");
+        card.style.animation="none"; void card.offsetWidth; card.style.animation="shake .4s";
+      }
+    }
+  }
+  function finish(won){
+    clearInterval(timerInt);
+    document.getElementById("escape-puzzle-card").style.display="none";
+    document.getElementById("escape-finish").style.display="block";
+    document.getElementById("escape-finish-emoji").textContent = won ? "🎉" : "⏰";
+    document.getElementById("escape-finish-title").textContent = won ? "هربت بنجاح!" : "انتهى الوقت!";
+    document.getElementById("escape-finish-text").textContent = won
+      ? "أحسنت! حللت جميع الألغاز الخمسة وفتحت الباب في الوقت المناسب."
+      : `حللت ${solved.filter(s=>s).length} من ${puzzles.length} ألغاز فقط. حاول مرة أخرى!`;
+  }
+  function cleanup(){ clearInterval(timerInt); }
+  return {init, cleanup};
+})();
+
+/* ================================================================
+   لعبة 6: عجلة الحظ
+   ================================================================ */
+const WheelGame=(function(){
+  const CATEGORIES=["صح / خطأ","اختيار من متعدد","نقطة مضاعفة ×2","أكمل الفراغ","فرصة إضافية","اختيار من متعدد","صح / خطأ","سؤال عشوائي"];
+  const REPEAT=6;
+  let scores={A:0,B:0}, spinning=false;
+  function init(){
+    scores={A:0,B:0};
+    document.getElementById("teamA-score").textContent=0;
+    document.getElementById("teamB-score").textContent=0;
+    document.getElementById("wheel-reveal").classList.remove("show");
+    buildReel();
+  }
+  function buildReel(){
+    const strip=document.getElementById("reel-strip");
+    strip.innerHTML="";
+    for(let r=0;r<REPEAT;r++){
+      CATEGORIES.forEach(c=>{
+        const d=document.createElement("div");
+        d.className="reel-item"; d.textContent=c;
+        strip.appendChild(d);
+      });
+    }
+    strip.style.transition="none";
+    strip.style.top="0px";
+  }
+  document.getElementById("btn-spin").addEventListener("click",()=>{
+    if(spinning) return;
+    spinning=true;
+    document.getElementById("wheel-reveal").classList.remove("show");
+    const winnerIndex=Math.floor(Math.random()*CATEGORIES.length);
+    const targetRepeat=REPEAT-2; // نوقف قريبًا من نهاية الشريط لإتاحة مسافة تمرير كافية
+    const totalIndex = targetRepeat*CATEGORIES.length + winnerIndex;
+    const itemHeight=60;
+    const targetTop = -(totalIndex*itemHeight) + 60; // +60 لتوسيط العنصر عند المؤشر
+    const strip=document.getElementById("reel-strip");
+    strip.style.transition="top 3s cubic-bezier(.15,.85,.3,1)";
+    strip.style.top=targetTop+"px";
+    setTimeout(()=>{
+      spinning=false;
+      revealCategory(CATEGORIES[winnerIndex]);
+    },3100);
+  });
+  function revealCategory(cat){
+    const titleEl=document.getElementById("wheel-cat-title");
+    const bodyEl=document.getElementById("wheel-q-body");
+    const answerEl=document.getElementById("wheel-answer");
+    answerEl.style.display="none";
+    titleEl.textContent="🎯 "+cat;
+    let question="", answer="";
+    if(cat.includes("صح")){
+      const q=pickRandom(TF_BANK,1)[0];
+      question=q.text; answer= q.correct? "الإجابة: صح":"الإجابة: خطأ";
+      bodyEl.innerHTML=`<p>${question}</p>`;
+    }else if(cat.includes("اختيار")){
+      const q=pickRandom(GENERAL_BANK,1)[0];
+      question=q.q; answer="الإجابة الصحيحة: "+q.options[0];
+      bodyEl.innerHTML=`<p>${question}</p><p style="color:var(--ink-soft);font-size:.9rem;">${shuffle(q.options).join(" | ")}</p>`;
+    }else if(cat.includes("أكمل")){
+      const q=pickRandom(BLANK_BANK,1)[0];
+      question=q.q; answer="الإجابة الصحيحة: "+q.a;
+      bodyEl.innerHTML=`<p>${question}</p>`;
+    }else if(cat.includes("مضاعفة")){
+      const q=pickRandom(GENERAL_BANK,1)[0];
+      question=q.q; answer="الإجابة الصحيحة: "+q.options[0]+" (نقاط هذه الجولة مضاعفة!)";
+      bodyEl.innerHTML=`<p>🌟 نقاط هذه الجولة مضاعفة!</p><p>${question}</p>`;
+    }else if(cat.includes("فرصة")){
+      bodyEl.innerHTML=`<p>🎁 الفريق يحصل على فرصة إضافية للف العجلة مرة أخرى دون خسارة الدور!</p>`;
+      answer="";
+    }else{
+      const q=pickRandom(GENERAL_BANK,1)[0];
+      question=q.q; answer="الإجابة الصحيحة: "+q.options[0];
+      bodyEl.innerHTML=`<p>${question}</p>`;
+    }
+    document.getElementById("wheel-answer").textContent=answer;
+    document.getElementById("wheel-reveal").classList.add("show");
+  }
+  document.getElementById("wheel-reveal-btn").addEventListener("click",()=>{
+    document.getElementById("wheel-answer").style.display="block";
+  });
+  document.querySelectorAll("[data-team]").forEach(b=>{
+    b.addEventListener("click",()=>{
+      const team=b.dataset.team, pts=parseInt(b.dataset.pts);
+      scores[team]=Math.max(0,scores[team]+pts);
+      document.getElementById("team"+team+"-score").textContent=scores[team];
+    });
+  });
+  return {init};
+})();
+
+/* ================================================================
+   لعبة 7: اصطد الإجابة
+   ================================================================ */
+const FallingGame=(function(){
+  let score=0, hearts=3, qIndex=0, queue=[], activeBubbles=[], rafId=null, questionLive=false;
+  const AREA_H=420, BUBBLE_SIZE=84, FALL_SPEED=55; // px/second تقريبًا
+  function init(){
+    score=0; hearts=3; qIndex=0;
+    queue=pickRandom(GENERAL_BANK,10);
+    document.getElementById("fall-score").textContent=0;
+    document.getElementById("fall-hearts").textContent=3;
+    document.getElementById("falling-area").innerHTML="";
+    document.getElementById("falling-area").style.display="block";
+    document.getElementById("fall-target").style.display="block";
+    document.getElementById("fall-finish").style.display="none";
+    nextQuestion();
+    lastTs=null;
+    rafId=requestAnimationFrame(loop);
+  }
+  let lastTs=null;
+  function nextQuestion(){
+    if(qIndex>=queue.length){ finish(); return; }
+    const q=queue[qIndex];
+    document.getElementById("fall-target").textContent="بسّط: "+q.q.replace("بسّط: ","");
+    document.getElementById("falling-area").innerHTML="";
+    activeBubbles=[];
+    const opts=shuffle(q.options.map((op,i)=>({op,i})));
+    const areaWidth=document.getElementById("falling-area").clientWidth||600;
+    const slot=areaWidth/opts.length;
+    opts.forEach((o,i)=>{
+      const el=document.createElement("button");
+      el.className="bubble";
+      el.textContent=o.op;
+      const x = slot*i + (slot-BUBBLE_SIZE)/2;
+      el.style.left=Math.max(4,x)+"px";
+      el.style.top=(-100-Math.random()*260)+"px";
+      el.dataset.correct = (o.i===0)?"1":"0";
+      el.addEventListener("click",()=>{
+        if(!questionLive) return;
+        if(el.dataset.correct==="1"){
+          score++; document.getElementById("fall-score").textContent=score;
+          questionLive=false;
+          document.getElementById("falling-area").innerHTML="";
+          qIndex++; setTimeout(nextQuestion,300);
+        }else{
+          hearts--; document.getElementById("fall-hearts").textContent=hearts;
+          el.remove();
+          if(hearts<=0){ questionLive=false; finish(); }
+        }
+      });
+      document.getElementById("falling-area").appendChild(el);
+      activeBubbles.push(el);
+    });
+    questionLive=true;
+  }
+  function loop(ts){
+    if(!lastTs) lastTs=ts;
+    const dt=(ts-lastTs)/1000;
+    lastTs=ts;
+    if(questionLive){
+      let correctFell=false;
+      activeBubbles.forEach(el=>{
+        if(!el.isConnected) return;
+        const top=parseFloat(el.style.top)||0;
+        const newTop=top+FALL_SPEED*dt;
+        el.style.top=newTop+"px";
+        if(newTop>AREA_H){
+          if(el.dataset.correct==="1") correctFell=true;
+          el.remove();
+        }
+      });
+      if(correctFell){
+        hearts--; document.getElementById("fall-hearts").textContent=hearts;
+        questionLive=false;
+        document.getElementById("falling-area").innerHTML="";
+        if(hearts<=0){ finish(); }
+        else{ qIndex++; setTimeout(nextQuestion,300); }
+      }
+    }
+    rafId=requestAnimationFrame(loop);
+  }
+  function finish(){
+    cancelAnimationFrame(rafId);
+    document.getElementById("falling-area").style.display="none";
+    document.getElementById("fall-target").style.display="none";
+    document.getElementById("fall-finish").style.display="block";
+    document.getElementById("fall-finish-text").textContent=`نقاطك النهائية: ${score} من ${queue.length}.`;
+  }
+  function cleanup(){ cancelAnimationFrame(rafId); questionLive=false; }
+  return {init, cleanup};
+})();
+
+/* ================================================================
+   لعبة 8: بناء المعادلة
+   ================================================================ */
+const BuilderGame=(function(){
+  const ROUNDS=[
+    {template:["(a", ") = a¹²"], blanks:2, mode:"product", target:12, tiles:[2,3,4,5,6,7,12], inner:"ˣ"},
+    {template:["aˣ × aʸ = a⁹"], blanks:2, mode:"sum", target:9, tiles:[2,3,4,5,6,7,9]},
+    {template:["aˣ ÷ aʸ = a⁴"], blanks:2, mode:"diff", target:4, tiles:[2,3,5,6,7,9,10]},
+    {template:["(a×b)ˣ = a⁵ × b⁵"], blanks:1, mode:"single", target:5, tiles:[2,3,4,5,6]},
+    {template:["a⁰ × aˣ = a⁶"], blanks:1, mode:"single", target:6, tiles:[2,3,4,5,6]}
+  ];
+  let round=0, values=[], usedTiles=[];
+  function init(){
+    round=0;
+    document.getElementById("builder-finish").style.display="none";
+    document.querySelector("#view-builder .card").style.display="block";
+    renderDots();
+    renderRound();
+  }
+  function renderDots(){
+    const box=document.getElementById("builder-dots");
+    box.innerHTML="";
+    ROUNDS.forEach((r,i)=>{
+      const s=document.createElement("span");
+      if(i<round) s.classList.add("done");
+      if(i===round) s.classList.add("current");
+      box.appendChild(s);
+    });
+  }
+  function renderRound(){
+    if(round>=ROUNDS.length){ finish(); return; }
+    const r=ROUNDS[round];
+    values=new Array(r.blanks).fill(null);
+    usedTiles=new Array(r.tiles.length).fill(false);
+    document.getElementById("builder-feedback").textContent="";
+    document.getElementById("builder-feedback").className="box-feedback";
+    renderTemplate(r);
+    renderPool(r);
+  }
+  function renderTemplate(r){
+    const box=document.getElementById("builder-template");
+    if(round===0){
+      box.innerHTML = `(a<span class="blank-slot" data-b="0">?</span>)<span class="blank-slot" data-b="1">?</span> = a¹²`;
+    }else if(round===1){
+      box.innerHTML = `a<span class="blank-slot" data-b="0">?</span> × a<span class="blank-slot" data-b="1">?</span> = a⁹`;
+    }else if(round===2){
+      box.innerHTML = `a<span class="blank-slot" data-b="0">?</span> ÷ a<span class="blank-slot" data-b="1">?</span> = a⁴`;
+    }else if(round===3){
+      box.innerHTML = `(a×b)<span class="blank-slot" data-b="0">?</span> = a⁵ × b⁵`;
+    }else{
+      box.innerHTML = `a⁰ × a<span class="blank-slot" data-b="0">?</span> = a⁶`;
+    }
+    box.querySelectorAll(".blank-slot").forEach(sl=>{
+      sl.addEventListener("click",()=>{
+        const bi=parseInt(sl.dataset.b);
+        if(values[bi]!==null){
+          const usedIdx=values[bi].tileIdx;
+          usedTiles[usedIdx]=false;
+          values[bi]=null;
+          sl.textContent="?"; sl.classList.remove("filled");
+          renderPool(ROUNDS[round]);
+        }
+      });
+    });
+  }
+  function renderPool(r){
+    const box=document.getElementById("builder-pool");
+    box.innerHTML="";
+    r.tiles.forEach((t,i)=>{
+      const b=document.createElement("button");
+      b.className="tile"+(usedTiles[i]?" used":"");
+      b.textContent=t;
+      b.addEventListener("click",()=>{
+        if(usedTiles[i]) return;
+        const emptyIdx=values.findIndex(v=>v===null);
+        if(emptyIdx===-1) return;
+        values[emptyIdx]={val:t,tileIdx:i};
+        usedTiles[i]=true;
+        const slot=document.querySelector(`.blank-slot[data-b="${emptyIdx}"]`);
+        slot.textContent=t; slot.classList.add("filled");
+        renderPool(r);
+      });
+      box.appendChild(b);
+    });
+  }
+  document.getElementById("builder-check").addEventListener("click",()=>{
+    const r=ROUNDS[round];
+    const fb=document.getElementById("builder-feedback");
+    if(values.some(v=>v===null)){ fb.textContent="أكمل جميع الفراغات أولًا."; fb.className="box-feedback bad"; return; }
+    const nums=values.map(v=>v.val);
+    let ok=false;
+    if(r.mode==="product") ok = nums[0]*nums[1]===r.target;
+    else if(r.mode==="sum") ok = nums[0]+nums[1]===r.target;
+    else if(r.mode==="diff") ok = Math.abs(nums[0]-nums[1])===r.target;
+    else if(r.mode==="single") ok = nums[0]===r.target;
+    if(ok){
+      fb.textContent="✔️ صحيح! الانتقال للجولة التالية..."; fb.className="box-feedback ok";
+      round++;
+      setTimeout(()=>{ renderDots(); renderRound(); },900);
+    }else{
+      fb.textContent="✖️ غير صحيح، جرّب قيمًا أخرى."; fb.className="box-feedback bad";
+    }
+  });
+  function finish(){
+    document.querySelector("#view-builder .card").style.display="none";
+    document.getElementById("builder-finish").style.display="block";
+  }
+  return {init};
+})();
+
+/* ================================================================
+   سجل الألعاب
+   ================================================================ */
+const GAMES={
+  tower:TowerGame, memory:MemoryGame, speedrun:SpeedGame, box:BoxGame,
+  escape:EscapeGame, wheel:WheelGame, falling:FallingGame, builder:BuilderGame
+};
+
+/* ربط دوال التنظيف عند مغادرة كل لعبة (لإيقاف المؤقتات في الخلفية) */
+const originalShowView=showView;
+showView=function(id){
+  if(typeof activeCleanup==="function"){ activeCleanup(); activeCleanup=null; }
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById("view-"+id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(GAMES[id] && typeof GAMES[id].cleanup==="function"){ activeCleanup=GAMES[id].cleanup; }
+};
+</script>
+</body>
+</html>
